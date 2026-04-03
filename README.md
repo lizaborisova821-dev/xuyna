@@ -1,39 +1,43 @@
-# Xuyna - Modern Web Experience
+# Люблю грозу в начале мая 🌧
 
-A premium, high-performance landing page designed for modern web applications.
+Трекер привычек и заданий, приуроченных к дождливой погоде "Люблю грозу в начале мая". 
 
-## ✨ Features
-- **Aesthetic Dark Mode**: Glassmorphism and vibrant gradients.
-- **Micro-animations**: Smooth transitions and scroll reveal effects.
-- **Responsive Layout**: Built for mobile, tablet, and desktop screens.
-- **Modern Typography**: Using Google Fonts (Outfit & Inter).
+Проект представляет собой мини-приложение (PWA) для браузера и смартфонов. Он не содержит базы данных и использует лишь `localStorage` для хранения вашего прогресса. Данное приложение идеально подходит для хостинга на статических платформах, таких как **GitHub Pages**.
 
-## 🚀 How to Deploy to GitHub Pages
+## Фичи
+- **Полная автономность:** Работает офлайн без подключения к интернету благодаря Service Worker.
+- **PWA Widget:** Прекрасно работает при установке на главный экран смартфона (как "standalone" приложение).
+- **Отсутствие бэкенда:** Прогресс сохраняется в `localStorage` вашего браузера.
+- **Кастомный дизайн:** Используются рукописные стили и шрифты для уюта в дождливую погоду.
+- **Программа генерации:** Легко настраивать задания через обновление макета и вызов генератора.
 
-1. **Upload to GitHub**:
-   - Create a new repository on GitHub.
-   - Run the following commands in your terminal:
-     ```bash
-     git add .
-     git commit -m "Initial commit: Professional Landing Page"
-     git branch -M main
-     git remote add origin https://github.com/yourusername/xuyna.git
-     git push -u origin main
-     ```
-2. **Enable GitHub Pages**:
-   - Go to your repository settings on GitHub.
-   - Navigate to **Pages** in the sidebar.
-   - Under **Build and deployment**, select **Deploy from a branch**.
-   - Select the `main` branch and `/root` folder.
-   - Click **Save**.
+## Запуск 
 
-Your site will be live at `https://yourusername.github.io/xuyna/` within a few minutes!
+Чтобы запустить проект локально, вам нужен только веб-сервер, который может отдавать статические файлы. Приложение работает напрямую из `index.html`.
 
-## 🛠 Local Development
-
-To view the site locally, simply open `index.html` in your favorite browser.
-
-Alternatively, use a local server:
+Для проверки локально можно использовать Python:
 ```bash
-npx live-server
+python -m http.server
 ```
+Далее откройте `http://localhost:8000/index.html` в браузере.
+
+## Деплой на GitHub Pages
+
+1. Сделайте push всего репозитория в GitHub.
+2. Перейдите в **Settings** > **Pages** вашего репозитория.
+3. Выберите "Deploy from a branch" и укажите вашу основную ветку (например, `main`).
+4. Нажмите Save и подождите несколько минут — ваш сайт будет доступен в интернете!
+
+## Модификация / Разработка
+
+Задания и иконки берутся из предоставленного спецификационного файла (`context/rain_tracker_spec.html`).
+Если вы хотите обновить задания:
+1. Отредактируйте источник задач в файле макета.
+2. В консоли запустите скрипт генерации (управляем через [uv](https://github.com/astral-sh/uv)):
+```bash
+uv run scripts/generate.py
+```
+Скрипт пересоберет файл `index.html`, основываясь на новых данных из макета.
+
+---
+Сделано с любовью к дождливой погоде! ☕️
