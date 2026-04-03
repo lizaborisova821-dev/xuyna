@@ -1,81 +1,406 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xuyna - Modern Digital Experience</title>
-    <meta name="description" content="A premium, state-of-the-art web experience built for performance and aesthetics.">
-    <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts: Outfit and Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Люблю грозу в начале мая</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&display=swap');
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            font-family: 'Caveat', cursive;
+            background: #F5F0E8;
+            color: #1a1a1a;
+            min-height: 100svh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .wrap {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 24px 16px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 2px solid #1a1a1a;
+            margin: 16px 0 24px;
+        }
+
+        /* Screen 1: Welcome */
+        #screen-welcome {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .mode-btn {
+            background: #fff;
+            border: 2px solid #1a1a1a;
+            border-radius: 12px;
+            padding: 16px 32px;
+            font-family: 'Caveat', cursive;
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 200px;
+            margin: 8px;
+            transition: transform 0.1s;
+        }
+        .mode-btn:active {
+            transform: scale(0.95);
+        }
+        .mode-btn.yellow { background: #FFD54F; }
+        .mode-btn.blue { background: #90CAF9; }
+        .mode-btn.red { background: #EF9A9A; }
+
+        /* Screen 2: Tracker */
+        #screen-tracker {
+            display: none;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            gap: 8px;
+        }
+        .progress-drop {
+            color: #90CAF9;
+        }
+
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+        }
+
+        .task-card {
+            background: #fff;
+            border: 2px solid #1a1a1a;
+            border-radius: 12px;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+            text-align: center;
+            transition: transform 0.1s;
+        }
+        .task-card:active {
+            transform: scale(0.98);
+        }
+        .task-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 12px;
+        }
+        .task-title {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .task-card.completed .task-icon,
+        .task-card.completed .task-title {
+            opacity: 0.5;
+        }
+        .task-card.completed::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: #1a1a1a;
+            transform: translateY(-50%) rotate(-10deg);
+            pointer-events: none;
+        }
+
+        /* Modal Screen */
+        #modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(26, 26, 26, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        #modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-card {
+            background: #F5F0E8;
+            border: 3px solid #1a1a1a;
+            border-radius: 16px;
+            padding: 32px 24px;
+            max-width: 320px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 8px; right: 12px;
+            font-size: 32px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .modal-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .modal-text {
+            font-size: 18px;
+            line-height: 1.4;
+        }
+        .modal-hint {
+            font-size: 14px;
+            color: #666;
+            margin-top: 24px;
+        }
+
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
-    <div class="background-blobs">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
+
+<div class="wrap">
+    <!-- Screen 1 -->
+    <div id="screen-welcome">
+        <h1 id="welcome-title">🌧 Люблю грозу в начале мая</h1>
+        <p style="font-size: 20px; color: #555;">Выбери количество дождливых заданий</p>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-top:24px;">
+            <button class="mode-btn yellow" onclick="startApp(12)">12 заданий</button>
+            <button class="mode-btn blue" onclick="startApp(22)">22 задания</button>
+            <button class="mode-btn red" onclick="startApp(30)">30 заданий</button>
+        </div>
     </div>
 
-    <nav id="navbar">
-        <div class="container">
-            <div class="logo">XUYNA</div>
-            <ul class="nav-links">
-                <li><a href="#hero">Home</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact" class="btn-primary">Get Started</a></li>
-            </ul>
+    <!-- Screen 2 -->
+    <div id="screen-tracker">
+        <h1 id="reset-trigger">🌧 Люблю грозу в начале мая</h1>
+        <hr class="divider">
+        <div class="progress-header">
+            Выполнено <span id="progress-val">0</span> из <span id="progress-total">12</span> <span class="progress-drop">💧</span>
         </div>
-    </nav>
+        <div class="task-grid" id="task-grid"></div>
+    </div>
+</div>
 
-    <header id="hero">
-        <div class="container hero-content">
-            <h1 class="hero-title">Experience the <span class="gradient-text">Future</span> of Modern Web</h1>
-            <p class="hero-subtitle">Elevate your digital presence with high-performance architectures, premium aesthetics, and seamless user experiences.</p>
-            <div class="hero-actions">
-                <button class="btn-primary">Explore Now</button>
-                <button class="btn-secondary">View Documentation</button>
-            </div>
-        </div>
-    </header>
+<div id="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-close" onclick="closeModal()">×</div>
+        <div class="modal-icon" id="modal-icon" onclick="completeFromModal()"></div>
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-text" id="modal-text"></div>
+        <div class="modal-hint">коснись рисунка — отметить выполненным</div>
+    </div>
+</div>
 
-    <section id="features">
-        <div class="container">
-            <h2 class="section-title">Why Choose Xuyna?</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="icon">🚀</div>
-                    <h3>Ultra Fast</h3>
-                    <p>Optimized for speed and performance to ensure the best possible user experience.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="icon">🎨</div>
-                    <h3>Premium Design</h3>
-                    <p>Meticulously crafted with a focus on modern aesthetics and accessibility.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="icon">💻</div>
-                    <h3>Responsive</h3>
-                    <p>Perfectly adapted to every screen size, from mobile devices to desktop monitors.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<script>
+    const allTasks = [{"id": 1, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u041d\u0430\u0443\u0448\u043d\u0438\u043a\u0438 + \u0434\u043e\u0436\u0434\u044c -->\n        <ellipse cx=\"40\" cy=\"36\" rx=\"18\" ry=\"14\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <rect x=\"20\" y=\"36\" width=\"8\" height=\"12\" rx=\"4\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <rect x=\"52\" y=\"36\" width=\"8\" height=\"12\" rx=\"4\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <!-- \u043a\u0430\u043f\u043b\u0438 \u0434\u043e\u0436\u0434\u044f -->\n        <line x1=\"32\" y1=\"58\" x2=\"30\" y2=\"66\" stroke=\"#90CAF9\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <line x1=\"40\" y1=\"60\" x2=\"38\" y2=\"68\" stroke=\"#90CAF9\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <line x1=\"48\" y1=\"57\" x2=\"46\" y2=\"65\" stroke=\"#90CAF9\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n      </svg>", "title": "\u041c\u0435\u0434\u0438\u0442\u0430\u0446\u0438\u044f", "text": "\u0418\u0434\u0451\u0442 \u0434\u043e\u0436\u0434\u044c \u0438 \u0441\u0430\u043c\u043e\u0435 \u0432\u0440\u0435\u043c\u044f \u0443\u0441\u043f\u043e\u043a\u043e\u0438\u0442\u044c \u043d\u0435\u0440\u0432\u0438\u0448\u043a\u0438, \u043f\u043e\u0441\u043b\u0443\u0448\u0430\u0432 \u0435\u0433\u043e \u0437\u0432\u0443\u043a\u0438. \u0428\u0448\u0448\u0448\u0448..."}, {"id": 2, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0427\u0430\u0448\u043a\u0430 \u0447\u0430\u044f \u0441 \u043f\u0430\u0440\u043e\u043c -->\n        <rect x=\"22\" y=\"42\" width=\"36\" height=\"24\" rx=\"6\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <rect x=\"18\" y=\"62\" width=\"44\" height=\"5\" rx=\"2\" fill=\"#EF9A9A\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <path d=\"M58 52 Q66 52 66 58 Q66 64 58 64\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <!-- \u043f\u0430\u0440 -->\n        <path d=\"M30 38 Q32 32 30 26\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n        <path d=\"M40 36 Q42 30 40 24\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n        <path d=\"M50 38 Q52 32 50 26\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n      </svg>", "title": "\u0413\u043e\u0440\u044f\u0447\u0438\u0439 \u0447\u0430\u0439", "text": "\u0417\u0430\u0432\u0430\u0440\u0438 \u0441\u0430\u043c\u044b\u0439 \u0430\u0440\u043e\u043c\u0430\u0442\u043d\u044b\u0439 \u0447\u0430\u0439, \u043a\u0430\u043a\u043e\u0439 \u0442\u043e\u043b\u044c\u043a\u043e \u0435\u0441\u0442\u044c \u0434\u043e\u043c\u0430. \u041e\u0431\u043d\u0438\u043c\u0438 \u043a\u0440\u0443\u0436\u043a\u0443 \u0434\u0432\u0443\u043c\u044f \u0440\u0443\u043a\u0430\u043c\u0438 \u0438 \u043f\u0440\u043e\u0441\u0442\u043e \u0433\u0440\u0435\u0439\u0441\u044f."}, {"id": 3, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u041a\u043d\u0438\u0433\u0430 -->\n        <rect x=\"18\" y=\"22\" width=\"44\" height=\"52\" rx=\"4\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <line x1=\"40\" y1=\"22\" x2=\"40\" y2=\"74\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <rect x=\"18\" y=\"22\" width=\"22\" height=\"52\" rx=\"4\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <line x1=\"24\" y1=\"36\" x2=\"36\" y2=\"36\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <line x1=\"24\" y1=\"44\" x2=\"36\" y2=\"44\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <line x1=\"24\" y1=\"52\" x2=\"32\" y2=\"52\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n      </svg>", "title": "\u0427\u0442\u0435\u043d\u0438\u0435", "text": "\u041e\u0442\u043a\u0440\u043e\u0439 \u0442\u0443 \u043a\u043d\u0438\u0433\u0443, \u0447\u0442\u043e \u0434\u0430\u0432\u043d\u043e \u043b\u0435\u0436\u0438\u0442 \u043d\u0430 \u043f\u043e\u043b\u043a\u0435. \u0414\u043e\u0436\u0434\u044c \u0437\u0430 \u043e\u043a\u043d\u043e\u043c \u2014 \u043b\u0443\u0447\u0448\u0438\u0439 \u0431\u0435\u043b\u044b\u0439 \u0448\u0443\u043c \u0434\u043b\u044f \u0447\u0442\u0435\u043d\u0438\u044f."}, {"id": 4, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0414\u043e\u0436\u0434\u0435\u0432\u0438\u043a + \u0447\u0435\u043b\u043e\u0432\u0435\u0447\u0435\u043a -->\n        <ellipse cx=\"40\" cy=\"22\" rx=\"10\" ry=\"10\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <path d=\"M24 36 Q24 28 40 28 Q56 28 56 36 L60 68 L20 68 Z\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <!-- \u043a\u0430\u043f\u043b\u0438 -->\n        <line x1=\"14\" y1=\"14\" x2=\"12\" y2=\"24\" stroke=\"#90CAF9\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <line x1=\"66\" y1=\"16\" x2=\"64\" y2=\"26\" stroke=\"#90CAF9\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n      </svg>", "title": "\u041f\u0440\u043e\u0433\u0443\u043b\u043a\u0430 \u0432 \u0434\u043e\u0436\u0434\u044c", "text": "\u041d\u0430\u0434\u0435\u043d\u044c \u0434\u043e\u0436\u0434\u0435\u0432\u0438\u043a, \u0432\u044b\u0439\u0434\u0438 \u043d\u0430\u0440\u0443\u0436\u0443 \u0438 \u043f\u0440\u043e\u0439\u0434\u0438\u0441\u044c. \u0414\u043e\u0436\u0434\u044c \u2014 \u043d\u0435 \u043f\u043e\u043c\u0435\u0445\u0430, \u043e\u043d \u0447\u0430\u0441\u0442\u044c \u043f\u0440\u043e\u0433\u0443\u043b\u043a\u0438."}, {"id": 5, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0417\u0430\u043f\u0438\u0441\u043d\u0430\u044f \u043a\u043d\u0438\u0436\u043a\u0430 + \u043a\u0430\u0440\u0430\u043d\u0434\u0430\u0448 -->\n        <rect x=\"20\" y=\"18\" width=\"38\" height=\"48\" rx=\"4\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <line x1=\"28\" y1=\"18\" x2=\"28\" y2=\"66\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <line x1=\"34\" y1=\"30\" x2=\"52\" y2=\"30\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <line x1=\"34\" y1=\"40\" x2=\"52\" y2=\"40\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <line x1=\"34\" y1=\"50\" x2=\"44\" y2=\"50\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <!-- \u043a\u0430\u0440\u0430\u043d\u0434\u0430\u0448 -->\n        <rect x=\"56\" y=\"24\" width=\"8\" height=\"30\" rx=\"2\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"1.5\" transform=\"rotate(25 60 39)\"/>\n        <polygon points=\"60,54 57,62 63,62\" fill=\"#EF9A9A\" stroke=\"#1a1a1a\" stroke-width=\"1.5\" transform=\"rotate(25 60 58)\"/>\n      </svg>", "title": "\u0414\u043d\u0435\u0432\u043d\u0438\u043a \u043f\u043e\u0433\u043e\u0434\u044b", "text": "\u0417\u0430\u043f\u0438\u0448\u0438 \u0441\u0435\u0433\u043e\u0434\u043d\u044f\u0448\u043d\u0438\u0439 \u0434\u043e\u0436\u0434\u044c. \u041a\u0430\u043a \u043f\u0430\u0445\u043d\u0435\u0442? \u041a\u0430\u043a\u043e\u0439 \u0437\u0432\u0443\u043a \u0443 \u043a\u0430\u043f\u0435\u043b\u044c \u043e \u043f\u043e\u0434\u043e\u043a\u043e\u043d\u043d\u0438\u043a? \u0422\u0440\u0438 \u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u044f \u2014 \u0438 \u0442\u044b \u043f\u043e\u044d\u0442."}, {"id": 6, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0417\u043e\u043d\u0442 -->\n        <path d=\"M40 18 Q12 18 12 44 Q26 32 40 44 Q54 32 68 44 Q68 18 40 18 Z\" fill=\"#EF9A9A\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <line x1=\"40\" y1=\"44\" x2=\"40\" y2=\"68\" stroke=\"#1a1a1a\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        <path d=\"M40 68 Q40 76 34 76\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        <!-- \u043f\u043e\u043b\u043e\u0441\u043a\u0438 \u043d\u0430 \u0437\u043e\u043d\u0442\u0435 -->\n        <path d=\"M40 44 Q26 32 12 44\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1\"/>\n        <path d=\"M40 44 Q54 32 68 44\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1\"/>\n        <line x1=\"40\" y1=\"18\" x2=\"40\" y2=\"44\" stroke=\"#1a1a1a\" stroke-width=\"1\"/>\n      </svg>", "title": "\u0421\u0442\u043e\u0439 \u043f\u043e\u0434 \u0434\u043e\u0436\u0434\u0451\u043c", "text": "\u041f\u0440\u043e\u0441\u0442\u043e \u0432\u044b\u0439\u0434\u0438 \u043f\u043e\u0434 \u043a\u043e\u0437\u044b\u0440\u0451\u043a \u0438\u043b\u0438 \u043d\u0430 \u0431\u0430\u043b\u043a\u043e\u043d \u0431\u0435\u0437 \u0437\u043e\u043d\u0442\u0430 \u043d\u0430 \u043e\u0434\u043d\u0443 \u043c\u0438\u043d\u0443\u0442\u0443. \u041f\u043e\u0447\u0443\u0432\u0441\u0442\u0432\u0443\u0439, \u043a\u0430\u043a \u043c\u043e\u043a\u0440\u043e \u0438 \u0436\u0438\u0432\u043e."}, {"id": 7, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0422\u0430\u0440\u0435\u043b\u043a\u0430 \u0441 \u0441\u0443\u043f\u043e\u043c -->\n        <ellipse cx=\"40\" cy=\"52\" rx=\"28\" ry=\"10\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <path d=\"M12 52 Q12 68 40 68 Q68 68 68 52\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <!-- \u043f\u0430\u0440 -->\n        <path d=\"M28 44 Q30 36 28 28\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n        <path d=\"M40 42 Q42 34 40 26\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n        <path d=\"M52 44 Q54 36 52 28\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n      </svg>", "title": "\u0421\u0443\u043f \u0432 \u0434\u043e\u0436\u0434\u044c", "text": "\u0421\u0432\u0430\u0440\u0438 \u0441\u0443\u043f \u2014 \u043b\u044e\u0431\u043e\u0439, \u0434\u0430\u0436\u0435 \u0438\u0437 \u043f\u0430\u043a\u0435\u0442\u0438\u043a\u0430. \u0414\u043e\u0436\u0434\u044c \u0438 \u0433\u043e\u0440\u044f\u0447\u0438\u0439 \u0441\u0443\u043f \u2014 \u044d\u0442\u043e \u043f\u0430\u0440\u0430, \u043f\u0440\u0438\u0434\u0443\u043c\u0430\u043d\u043d\u0430\u044f \u0441\u043f\u0435\u0446\u0438\u0430\u043b\u044c\u043d\u043e \u0434\u043b\u044f \u0442\u0430\u043a\u0438\u0445 \u0434\u043d\u0435\u0439."}, {"id": 8, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u041f\u043b\u0451\u043d\u043a\u0430/\u0444\u043e\u0442\u043e -->\n        <rect x=\"16\" y=\"24\" width=\"48\" height=\"36\" rx=\"4\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <rect x=\"22\" y=\"30\" width=\"36\" height=\"24\" rx=\"2\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <!-- \u043a\u0430\u043f\u043b\u0438 \u043d\u0430 \u0441\u0442\u0435\u043a\u043b\u0435 -->\n        <ellipse cx=\"34\" cy=\"42\" rx=\"4\" ry=\"5\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"1.2\"/>\n        <ellipse cx=\"46\" cy=\"38\" rx=\"3\" ry=\"4\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"1.2\"/>\n        <ellipse cx=\"30\" cy=\"35\" rx=\"2\" ry=\"3\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"1\"/>\n      </svg>", "title": "\u041a\u0430\u043f\u043b\u0438 \u043d\u0430 \u0441\u0442\u0435\u043a\u043b\u0435", "text": "\u0421\u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438\u0440\u0443\u0439 \u043a\u0430\u043f\u043b\u0438 \u043d\u0430 \u043e\u043a\u043e\u043d\u043d\u043e\u043c \u0441\u0442\u0435\u043a\u043b\u0435 \u2014 \u044d\u0442\u043e \u0432\u0441\u0435\u0433\u0434\u0430 \u043a\u0440\u0430\u0441\u0438\u0432\u043e. \u0414\u043e\u0436\u0434\u044c \u0441\u0430\u043c \u0440\u0438\u0441\u0443\u0435\u0442 \u043a\u0430\u0440\u0442\u0438\u043d\u0443, \u0442\u044b \u0442\u043e\u043b\u044c\u043a\u043e \u043d\u0430\u0436\u043c\u0438."}, {"id": 9, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u041f\u043b\u0435\u0434/\u043a\u043b\u0443\u0431\u043e\u043a + \u043d\u043e\u0441\u043a\u0438 -->\n        <ellipse cx=\"40\" cy=\"44\" rx=\"22\" ry=\"16\" fill=\"#EF9A9A\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <path d=\"M26 38 Q40 28 54 38\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <path d=\"M24 44 Q40 34 56 44\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <!-- \u043d\u043e\u0441\u043a\u0438 -->\n        <path d=\"M18 60 L18 72 Q26 76 30 70 L30 60 Z\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <path d=\"M50 60 L50 72 Q58 76 62 70 L62 60 Z\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n      </svg>", "title": "\u0414\u0435\u043d\u044c \u043f\u043b\u0435\u0434\u0430", "text": "\u0414\u043e\u0441\u0442\u0430\u043d\u044c \u0441\u0430\u043c\u044b\u0439 \u0443\u044e\u0442\u043d\u044b\u0439 \u043f\u043b\u0435\u0434, \u043d\u0430\u0434\u0435\u043d\u044c \u0442\u043e\u043b\u0441\u0442\u044b\u0435 \u043d\u043e\u0441\u043a\u0438 \u0438 \u043d\u0438\u043a\u0443\u0434\u0430 \u043d\u0435 \u0432\u044b\u0445\u043e\u0434\u0438. \u0421\u0435\u0433\u043e\u0434\u043d\u044f \u043c\u043e\u0436\u043d\u043e."}, {"id": 10, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u041b\u0443\u0436\u0430 + \u0441\u0430\u043f\u043e\u0433\u0438 -->\n        <ellipse cx=\"40\" cy=\"66\" rx=\"28\" ry=\"8\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <rect x=\"24\" y=\"36\" width=\"12\" height=\"32\" rx=\"4\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <rect x=\"44\" y=\"36\" width=\"12\" height=\"32\" rx=\"4\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <rect x=\"20\" y=\"58\" width=\"20\" height=\"8\" rx=\"4\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <rect x=\"40\" y=\"58\" width=\"20\" height=\"8\" rx=\"4\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <!-- \u0431\u0440\u044b\u0437\u0433\u0438 -->\n        <line x1=\"14\" y1=\"60\" x2=\"10\" y2=\"52\" stroke=\"#90CAF9\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <line x1=\"66\" y1=\"60\" x2=\"70\" y2=\"52\" stroke=\"#90CAF9\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n      </svg>", "title": "\u041f\u0440\u044b\u0433\u043d\u0438 \u0432 \u043b\u0443\u0436\u0443", "text": "\u041d\u0430\u0434\u0435\u043d\u044c \u043a\u0430\u043b\u043e\u0448\u0438 \u0438 \u043d\u0430\u0439\u0434\u0438 \u0441\u0430\u043c\u0443\u044e \u0431\u043e\u043b\u044c\u0448\u0443\u044e \u043b\u0443\u0436\u0443. \u041f\u0440\u044b\u0433\u043d\u0438. \u041f\u0440\u043e\u0441\u0442\u043e \u043f\u043e\u0442\u043e\u043c\u0443 \u0447\u0442\u043e \u0442\u044b \u044d\u0442\u043e \u0437\u0430\u0441\u043b\u0443\u0436\u0438\u043b(\u0430)."}, {"id": 11, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0421\u0432\u0435\u0447\u0430 -->\n        <rect x=\"34\" y=\"34\" width=\"12\" height=\"34\" rx=\"3\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <rect x=\"30\" y=\"64\" width=\"20\" height=\"6\" rx=\"3\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <!-- \u043e\u0433\u043e\u043d\u044c -->\n        <path d=\"M40 34 Q36 26 38 18 Q40 14 42 18 Q44 26 40 34 Z\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <path d=\"M40 30 Q38 26 39 22 Q40 20 41 22 Q42 26 40 30 Z\" fill=\"#EF9A9A\"/>\n        <!-- \u0431\u043b\u0438\u043a\u0438 \u0441\u0432\u0435\u0447\u0438 -->\n        <line x1=\"22\" y1=\"42\" x2=\"16\" y2=\"38\" stroke=\"#FFD54F\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n        <line x1=\"58\" y1=\"42\" x2=\"64\" y2=\"38\" stroke=\"#FFD54F\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n      </svg>", "title": "\u0421\u0432\u0435\u0447\u0430 \u0432 \u0442\u0435\u043c\u043d\u043e\u0442\u0435", "text": "\u0417\u0430\u0436\u0433\u0438 \u0441\u0432\u0435\u0447\u0443, \u0432\u044b\u043a\u043b\u044e\u0447\u0438 \u0432\u0435\u0440\u0445\u043d\u0438\u0439 \u0441\u0432\u0435\u0442 \u0438 \u0441\u043b\u0443\u0448\u0430\u0439 \u0434\u043e\u0436\u0434\u044c \u0432 \u043f\u043e\u043b\u0443\u0442\u044c\u043c\u0435. \u0425\u043e\u0442\u044f \u0431\u044b \u043f\u044f\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u044c \u043c\u0438\u043d\u0443\u0442."}, {"id": 12, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0412\u0430\u043d\u043d\u0430 -->\n        <path d=\"M14 50 Q14 66 40 66 Q66 66 66 50 L66 44 L14 44 Z\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <line x1=\"14\" y1=\"44\" x2=\"66\" y2=\"44\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <rect x=\"26\" y=\"36\" width=\"8\" height=\"10\" rx=\"2\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <rect x=\"46\" y=\"36\" width=\"8\" height=\"10\" rx=\"2\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <!-- \u043f\u0443\u0437\u044b\u0440\u0438 \u043f\u0435\u043d\u044b -->\n        <circle cx=\"32\" cy=\"50\" r=\"5\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <circle cx=\"44\" cy=\"48\" r=\"4\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <circle cx=\"54\" cy=\"52\" r=\"3\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n      </svg>", "title": "\u0413\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u0430\u043d\u043d\u0430", "text": "\u041d\u0430\u0431\u0435\u0440\u0438 \u0433\u043e\u0440\u044f\u0447\u0443\u044e \u0432\u0430\u043d\u043d\u0443 \u0441 \u043f\u0435\u043d\u043e\u0439, \u043f\u043e\u043a\u0430 \u0434\u043e\u0436\u0434\u044c \u0441\u0442\u0443\u0447\u0438\u0442 \u0432 \u043e\u043a\u043d\u043e. \u041b\u0435\u0436\u0438 \u0438 \u0441\u043b\u0443\u0448\u0430\u0439. \u0422\u044b \u0432 \u043b\u0443\u0447\u0448\u0435\u043c \u043c\u0435\u0441\u0442\u0435 \u043d\u0430 \u0437\u0435\u043c\u043b\u0435."}, {"id": 13, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0422\u0435\u043b\u0435\u0444\u043e\u043d + \u0440\u0430\u0437\u0433\u043e\u0432\u043e\u0440 -->\n        <rect x=\"28\" y=\"16\" width=\"24\" height=\"44\" rx=\"6\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <rect x=\"32\" y=\"22\" width=\"16\" height=\"26\" rx=\"2\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"1\"/>\n        <circle cx=\"40\" cy=\"54\" r=\"3\" fill=\"#1a1a1a\"/>\n        <!-- \u043f\u0443\u0437\u044b\u0440\u0438 \u0440\u0435\u0447\u0438 -->\n        <ellipse cx=\"62\" cy=\"30\" rx=\"10\" ry=\"7\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <polygon points=\"52,34 48,40 54,36\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"1\"/>\n        <line x1=\"56\" y1=\"27\" x2=\"66\" y2=\"27\" stroke=\"#1a1a1a\" stroke-width=\"1.2\"/>\n        <line x1=\"56\" y1=\"31\" x2=\"64\" y2=\"31\" stroke=\"#1a1a1a\" stroke-width=\"1.2\"/>\n      </svg>", "title": "\u041f\u043e\u0437\u0432\u043e\u043d\u0438 \u0434\u0440\u0443\u0433\u0443", "text": "\u041f\u043e\u0437\u0432\u043e\u043d\u0438 \u0442\u043e\u043c\u0443, \u043a\u043e\u043c\u0443 \u0434\u0430\u0432\u043d\u043e \u043d\u0435 \u0437\u0432\u043e\u043d\u0438\u043b. \u0421\u043a\u0430\u0436\u0438: \u00ab\u0441\u043b\u0443\u0448\u0430\u0439, \u0438\u0434\u0451\u0442 \u0434\u043e\u0436\u0434\u044c \u0438 \u044f \u0432\u0441\u043f\u043e\u043c\u043d\u0438\u043b \u043e \u0442\u0435\u0431\u0435\u00bb."}, {"id": 14, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0413\u043e\u0440\u0448\u043e\u043a \u0441 \u0440\u0430\u0441\u0442\u0435\u043d\u0438\u0435\u043c -->\n        <path d=\"M26 52 L28 72 L52 72 L54 52 Z\" fill=\"#EF9A9A\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <ellipse cx=\"40\" cy=\"52\" rx=\"16\" ry=\"5\" fill=\"#EF9A9A\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <line x1=\"40\" y1=\"52\" x2=\"40\" y2=\"28\" stroke=\"#1a1a1a\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        <ellipse cx=\"28\" cy=\"34\" rx=\"10\" ry=\"7\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"2\" transform=\"rotate(-20 28 34)\"/>\n        <ellipse cx=\"52\" cy=\"30\" rx=\"10\" ry=\"7\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"2\" transform=\"rotate(20 52 30)\"/>\n        <ellipse cx=\"40\" cy=\"24\" rx=\"9\" ry=\"6\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n      </svg>", "title": "\u041f\u043e\u043b\u0435\u0439 \u0446\u0432\u0435\u0442\u044b", "text": "\u0412\u044b\u0441\u0442\u0430\u0432\u044c \u0434\u043e\u043c\u0430\u0448\u043d\u0438\u0435 \u0440\u0430\u0441\u0442\u0435\u043d\u0438\u044f \u043d\u0430 \u0431\u0430\u043b\u043a\u043e\u043d \u043f\u043e\u0434 \u0434\u043e\u0436\u0434\u044c. \u0418\u043b\u0438 \u043f\u0440\u043e\u0441\u0442\u043e \u043f\u043e\u043b\u0435\u0439 \u0438\u0445. \u0418\u043c \u0442\u043e\u0436\u0435 \u043d\u0440\u0430\u0432\u0438\u0442\u0441\u044f \u0434\u043e\u0436\u0434\u043b\u0438\u0432\u0430\u044f \u043f\u043e\u0433\u043e\u0434\u0430."}, {"id": 15, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u041f\u0430\u0437\u043b -->\n        <rect x=\"18\" y=\"20\" width=\"22\" height=\"22\" rx=\"3\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <circle cx=\"40\" cy=\"26\" r=\"4\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <rect x=\"40\" y=\"20\" width=\"22\" height=\"22\" rx=\"3\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <circle cx=\"40\" cy=\"36\" r=\"4\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <rect x=\"18\" y=\"42\" width=\"22\" height=\"22\" rx=\"3\" fill=\"#EF9A9A\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <rect x=\"40\" y=\"42\" width=\"22\" height=\"22\" rx=\"3\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n      </svg>", "title": "\u041f\u0430\u0437\u043b", "text": "\u0414\u043e\u0441\u0442\u0430\u043d\u044c \u043f\u0430\u0437\u043b \u2014 \u0445\u043e\u0442\u044f \u0431\u044b \u043d\u0430 100 \u0434\u0435\u0442\u0430\u043b\u0435\u0439. \u0414\u043e\u0436\u0434\u044c \u0441\u043d\u0430\u0440\u0443\u0436\u0438, \u0442\u044b \u0441\u043a\u043b\u0430\u0434\u044b\u0432\u0430\u0435\u0448\u044c \u043c\u0438\u0440 \u043a\u0443\u0441\u043e\u0447\u043a\u0430\u043c\u0438. \u0421\u0430\u043c\u043e\u0435 \u0442\u043e."}, {"id": 16, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0412\u044b\u043f\u0435\u0447\u043a\u0430 / \u0431\u0443\u043b\u043e\u0447\u043a\u0430 -->\n        <ellipse cx=\"40\" cy=\"50\" rx=\"24\" ry=\"14\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <path d=\"M16 50 Q16 36 40 36 Q64 36 64 50\" fill=\"#EF9A9A\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <!-- \u043f\u043e\u0441\u044b\u043f\u043a\u0430 -->\n        <circle cx=\"30\" cy=\"44\" r=\"2\" fill=\"#EF9A9A\"/>\n        <circle cx=\"40\" cy=\"40\" r=\"2\" fill=\"#EF9A9A\"/>\n        <circle cx=\"52\" cy=\"44\" r=\"2\" fill=\"#EF9A9A\"/>\n        <circle cx=\"36\" cy=\"47\" r=\"1.5\" fill=\"#1a1a1a\"/>\n        <circle cx=\"46\" cy=\"47\" r=\"1.5\" fill=\"#1a1a1a\"/>\n      </svg>", "title": "\u0418\u0441\u043f\u0435\u043a\u0438 \u0447\u0442\u043e-\u043d\u0438\u0431\u0443\u0434\u044c", "text": "\u0414\u043e\u0436\u0434\u044c \u0438 \u0437\u0430\u043f\u0430\u0445 \u0432\u044b\u043f\u0435\u0447\u043a\u0438 \u2014 \u043a\u043e\u043c\u0431\u043e, \u043a\u043e\u0442\u043e\u0440\u043e\u0435 \u0434\u0435\u043b\u0430\u0435\u0442 \u0436\u0438\u0437\u043d\u044c \u0442\u0435\u0440\u043f\u0438\u043c\u043e\u0439. \u0425\u043e\u0442\u044f \u0431\u044b \u043f\u0435\u0447\u0435\u043d\u044c\u0435 \u0438\u0437 \u043f\u0430\u043a\u0435\u0442\u0438\u043a\u0430."}, {"id": 17, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u041a\u0440\u0430\u0441\u043a\u0438 -->\n        <rect x=\"16\" y=\"30\" width=\"48\" height=\"36\" rx=\"6\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <circle cx=\"28\" cy=\"44\" r=\"7\" fill=\"#EF9A9A\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <circle cx=\"40\" cy=\"44\" r=\"7\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <circle cx=\"52\" cy=\"44\" r=\"7\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <!-- \u043a\u0438\u0441\u0442\u043e\u0447\u043a\u0430 -->\n        <line x1=\"54\" y1=\"14\" x2=\"54\" y2=\"32\" stroke=\"#1a1a1a\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <ellipse cx=\"54\" cy=\"34\" rx=\"4\" ry=\"5\" fill=\"#EF9A9A\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n      </svg>", "title": "\u041d\u0430\u0440\u0438\u0441\u0443\u0439 \u0434\u043e\u0436\u0434\u044c", "text": "\u0412\u043e\u0437\u044c\u043c\u0438 \u0447\u0442\u043e \u0435\u0441\u0442\u044c \u2014 \u043a\u0430\u0440\u0430\u043d\u0434\u0430\u0448\u0438, \u0440\u0443\u0447\u043a\u0443, \u043c\u0430\u0440\u043a\u0435\u0440 \u2014 \u0438 \u043d\u0430\u0440\u0438\u0441\u0443\u0439 \u0434\u043e\u0436\u0434\u044c. \u041f\u043b\u043e\u0445\u043e \u0440\u0438\u0441\u0443\u0435\u0448\u044c? \u0422\u0435\u043c \u043b\u0443\u0447\u0448\u0435."}, {"id": 18, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u041a\u043e\u0442 -->\n        <ellipse cx=\"40\" cy=\"52\" rx=\"20\" ry=\"16\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <ellipse cx=\"40\" cy=\"34\" rx=\"14\" ry=\"12\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <!-- \u0443\u0448\u0438 -->\n        <polygon points=\"28,26 24,14 34,22\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <polygon points=\"52,26 56,14 46,22\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <!-- \u0433\u043b\u0430\u0437\u0430 -->\n        <ellipse cx=\"34\" cy=\"33\" rx=\"3\" ry=\"4\" fill=\"#1a1a1a\"/>\n        <ellipse cx=\"46\" cy=\"33\" rx=\"3\" ry=\"4\" fill=\"#1a1a1a\"/>\n        <!-- \u0443\u0441\u044b -->\n        <line x1=\"26\" y1=\"38\" x2=\"36\" y2=\"37\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <line x1=\"44\" y1=\"37\" x2=\"54\" y2=\"38\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <path d=\"M36 40 Q40 44 44 40\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n      </svg>", "title": "\u041e\u0431\u043d\u0438\u043c\u0438 \u043a\u043e\u0442\u0430", "text": "\u041d\u0430\u0439\u0434\u0438 \u043a\u043e\u0442\u0430 \u2014 \u0441\u0432\u043e\u0435\u0433\u043e, \u0441\u043e\u0441\u0435\u0434\u0441\u043a\u043e\u0433\u043e, \u0434\u0432\u043e\u0440\u043e\u0432\u043e\u0433\u043e. \u0414\u043e\u0436\u0434\u044c \u2014 \u043b\u0443\u0447\u0448\u0438\u0439 \u043f\u043e\u0432\u043e\u0434 \u043b\u0435\u0436\u0430\u0442\u044c \u0438 \u043d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u0434\u0435\u043b\u0430\u0442\u044c \u0432\u043c\u0435\u0441\u0442\u0435."}, {"id": 19, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u041a\u0438\u043d\u043e/\u044d\u043a\u0440\u0430\u043d -->\n        <rect x=\"12\" y=\"20\" width=\"56\" height=\"38\" rx=\"6\" fill=\"#1a1a1a\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <rect x=\"16\" y=\"24\" width=\"48\" height=\"30\" rx=\"3\" fill=\"#90CAF9\"/>\n        <!-- \u043f\u043e\u043f\u043a\u043e\u0440\u043d -->\n        <rect x=\"30\" y=\"58\" width=\"20\" height=\"14\" rx=\"3\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <circle cx=\"34\" cy=\"56\" r=\"4\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <circle cx=\"40\" cy=\"54\" r=\"4\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <circle cx=\"46\" cy=\"56\" r=\"4\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n      </svg>", "title": "\u0424\u0438\u043b\u044c\u043c \u043f\u043e\u0434 \u0434\u043e\u0436\u0434\u044c", "text": "\u0412\u043a\u043b\u044e\u0447\u0438 \u0442\u043e\u0442 \u0444\u0438\u043b\u044c\u043c, \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u0434\u0430\u0432\u043d\u043e \u043e\u0442\u043a\u043b\u0430\u0434\u044b\u0432\u0430\u043b. \u0414\u043e\u0436\u0434\u044c \u0437\u0430 \u043e\u043a\u043d\u043e\u043c \u2014 \u0432\u0441\u0442\u0440\u043e\u0435\u043d\u043d\u044b\u0439 \u0441\u0430\u0443\u043d\u0434\u0442\u0440\u0435\u043a, \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e."}, {"id": 20, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0413\u0440\u0438\u0431\u044b/\u043b\u0435\u0441 -->\n        <path d=\"M40 20 Q24 20 22 36 Q36 28 40 40 Q44 28 58 36 Q56 20 40 20 Z\" fill=\"#EF9A9A\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <rect x=\"36\" y=\"40\" width=\"8\" height=\"22\" rx=\"2\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <!-- \u0442\u043e\u0447\u043a\u0438 \u043d\u0430 \u0448\u043b\u044f\u043f\u043a\u0435 -->\n        <circle cx=\"34\" cy=\"28\" r=\"3\" fill=\"#F5F0E8\"/>\n        <circle cx=\"46\" cy=\"26\" r=\"3\" fill=\"#F5F0E8\"/>\n        <circle cx=\"40\" cy=\"24\" r=\"2\" fill=\"#F5F0E8\"/>\n        <!-- \u043a\u0430\u043f\u043b\u0438 -->\n        <line x1=\"18\" y1=\"50\" x2=\"16\" y2=\"58\" stroke=\"#90CAF9\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <line x1=\"62\" y1=\"52\" x2=\"60\" y2=\"60\" stroke=\"#90CAF9\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n      </svg>", "title": "\u041f\u043e\u0445\u043e\u0434 \u0437\u0430 \u0433\u0440\u0438\u0431\u0430\u043c\u0438", "text": "\u041f\u043e\u0441\u043b\u0435 \u0434\u043e\u0436\u0434\u044f \u2014 \u0441\u0430\u043c\u043e\u0435 \u0432\u0440\u0435\u043c\u044f. \u041e\u0434\u0435\u043d\u044c\u0441\u044f, \u0432\u044b\u0439\u0434\u0438 \u0432 \u043b\u0435\u0441 \u0438\u043b\u0438 \u043f\u0430\u0440\u043a, \u043d\u0430\u0439\u0434\u0438 \u0445\u043e\u0442\u044f \u0431\u044b \u043e\u0434\u0438\u043d \u0433\u0440\u0438\u0431. \u0418\u043b\u0438 \u043f\u0440\u043e\u0441\u0442\u043e \u043d\u044e\u0445\u0430\u0439 \u0437\u0435\u043c\u043b\u044e."}, {"id": 21, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u041f\u043b\u0435\u0439\u043b\u0438\u0441\u0442 / \u043d\u043e\u0442\u044b -->\n        <rect x=\"18\" y=\"20\" width=\"44\" height=\"46\" rx=\"8\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <circle cx=\"30\" cy=\"60\" r=\"7\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <circle cx=\"52\" cy=\"60\" r=\"7\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <rect x=\"36\" y=\"36\" width=\"4\" height=\"26\" fill=\"#1a1a1a\"/>\n        <rect x=\"48\" y=\"32\" width=\"4\" height=\"30\" fill=\"#1a1a1a\"/>\n        <path d=\"M36 36 Q42 30 52 32\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2.5\"/>\n      </svg>", "title": "\u0414\u043e\u0436\u0434\u043b\u0438\u0432\u044b\u0439 \u043f\u043b\u0435\u0439\u043b\u0438\u0441\u0442", "text": "\u0421\u043e\u0441\u0442\u0430\u0432\u044c \u043f\u043b\u0435\u0439\u043b\u0438\u0441\u0442 \u0441\u043f\u0435\u0446\u0438\u0430\u043b\u044c\u043d\u043e \u0434\u043b\u044f \u0434\u043e\u0436\u0434\u043b\u0438\u0432\u043e\u0433\u043e \u0434\u043d\u044f. \u0422\u043e\u043b\u044c\u043a\u043e \u043c\u0435\u0434\u043b\u0435\u043d\u043d\u044b\u0435, \u0442\u0438\u0445\u0438\u0435, \u043d\u0435\u043c\u043d\u043e\u0433\u043e \u043c\u0435\u043b\u0430\u043d\u0445\u043e\u043b\u0438\u0447\u043d\u044b\u0435 \u0432\u0435\u0449\u0438."}, {"id": 22, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0412\u0435\u043b\u043e\u0441\u0438\u043f\u0435\u0434 \u043f\u043e\u0434 \u0434\u043e\u0436\u0434\u0451\u043c -->\n        <circle cx=\"26\" cy=\"54\" r=\"14\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2.5\"/>\n        <circle cx=\"54\" cy=\"54\" r=\"14\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2.5\"/>\n        <line x1=\"26\" y1=\"54\" x2=\"40\" y2=\"34\" stroke=\"#1a1a1a\" stroke-width=\"2.2\" stroke-linecap=\"round\"/>\n        <line x1=\"40\" y1=\"34\" x2=\"54\" y2=\"54\" stroke=\"#1a1a1a\" stroke-width=\"2.2\" stroke-linecap=\"round\"/>\n        <line x1=\"40\" y1=\"34\" x2=\"40\" y2=\"28\" stroke=\"#1a1a1a\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <line x1=\"35\" y1=\"28\" x2=\"48\" y2=\"28\" stroke=\"#1a1a1a\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <!-- \u0434\u043e\u0436\u0434\u044c -->\n        <line x1=\"22\" y1=\"16\" x2=\"20\" y2=\"26\" stroke=\"#90CAF9\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <line x1=\"40\" y1=\"12\" x2=\"38\" y2=\"22\" stroke=\"#90CAF9\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <line x1=\"58\" y1=\"16\" x2=\"56\" y2=\"26\" stroke=\"#90CAF9\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n      </svg>", "title": "\u0415\u0437\u0434\u0430 \u043f\u043e\u0434 \u0434\u043e\u0436\u0434\u0451\u043c", "text": "\u041f\u043e\u0435\u0434\u044c \u043d\u0430 \u0432\u0435\u043b\u043e\u0441\u0438\u043f\u0435\u0434\u0435 \u0438\u043b\u0438 \u0441\u0430\u043c\u043e\u043a\u0430\u0442\u0435 \u0432 \u043b\u0451\u0433\u043a\u0438\u0439 \u0434\u043e\u0436\u0434\u044c. \u041f\u0440\u043e\u043c\u043e\u043a\u043d\u0443\u0442\u044c \u0440\u0430\u0437\u0440\u0435\u0448\u0430\u0435\u0442\u0441\u044f. \u042d\u0442\u043e \u043d\u0430\u0437\u044b\u0432\u0430\u0435\u0442\u0441\u044f \u00ab\u0436\u0438\u0442\u044c\u00bb."}, {"id": 23, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0417\u0432\u043e\u043d\u043e\u043a + \u0431\u0443\u043c\u0430\u0436\u043d\u044b\u0439 \u0441\u0430\u043c\u043e\u043b\u0451\u0442\u0438\u043a -->\n        <path d=\"M30 20 L20 60 L60 60 L50 20 Z\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <line x1=\"30\" y1=\"20\" x2=\"60\" y2=\"40\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <line x1=\"50\" y1=\"20\" x2=\"20\" y2=\"40\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <line x1=\"30\" y1=\"40\" x2=\"50\" y2=\"50\" stroke=\"#1a1a1a\" stroke-width=\"1\"/>\n      </svg>", "title": "\u041f\u0438\u0441\u044c\u043c\u043e \u0434\u0440\u0443\u0433\u0443", "text": "\u041d\u0430\u043f\u0438\u0448\u0438 \u043d\u0430\u0441\u0442\u043e\u044f\u0449\u0435\u0435 \u043f\u0438\u0441\u044c\u043c\u043e \u043e\u0442 \u0440\u0443\u043a\u0438. \u041d\u0435 \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435 \u2014 \u0438\u043c\u0435\u043d\u043d\u043e \u043f\u0438\u0441\u044c\u043c\u043e. \u0414\u043e\u0436\u0434\u044c \u043f\u043e\u043c\u043e\u0433\u0430\u0435\u0442 \u0434\u0443\u043c\u0430\u0442\u044c \u043e \u0441\u043b\u043e\u0432\u0430\u0445 \u043c\u0435\u0434\u043b\u0435\u043d\u043d\u0435\u0435."}, {"id": 24, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0428\u0430\u0445\u043c\u0430\u0442\u044b -->\n        <rect x=\"14\" y=\"44\" width=\"52\" height=\"22\" rx=\"4\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <!-- \u0434\u043e\u0441\u043a\u0430 -->\n        <rect x=\"20\" y=\"50\" width=\"10\" height=\"10\" fill=\"#1a1a1a\"/>\n        <rect x=\"40\" y=\"50\" width=\"10\" height=\"10\" fill=\"#1a1a1a\"/>\n        <rect x=\"30\" y=\"50\" width=\"10\" height=\"10\" fill=\"#F5F0E8\" stroke=\"#aaa\" stroke-width=\"0.5\"/>\n        <rect x=\"50\" y=\"50\" width=\"10\" height=\"10\" fill=\"#F5F0E8\" stroke=\"#aaa\" stroke-width=\"0.5\"/>\n        <!-- \u0444\u0438\u0433\u0443\u0440\u044b -->\n        <ellipse cx=\"28\" cy=\"38\" rx=\"6\" ry=\"4\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <rect x=\"25\" y=\"28\" width=\"6\" height=\"12\" rx=\"2\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <circle cx=\"28\" cy=\"24\" r=\"5\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <ellipse cx=\"52\" cy=\"38\" rx=\"6\" ry=\"4\" fill=\"#1a1a1a\"/>\n        <rect x=\"49\" y=\"28\" width=\"6\" height=\"12\" rx=\"2\" fill=\"#1a1a1a\"/>\n        <circle cx=\"52\" cy=\"24\" r=\"5\" fill=\"#1a1a1a\"/>\n      </svg>", "title": "\u041d\u0430\u0441\u0442\u043e\u043b\u043a\u0438", "text": "\u0428\u0430\u0445\u043c\u0430\u0442\u044b, \u043a\u0430\u0440\u0442\u044b, \u043c\u043e\u043d\u043e\u043f\u043e\u043b\u0438\u044f \u2014 \u0432\u0441\u0451 \u0447\u0442\u043e \u0435\u0441\u0442\u044c. \u0414\u043e\u0436\u0434\u043b\u0438\u0432\u044b\u0439 \u0434\u0435\u043d\u044c \u0431\u0435\u0437 \u043d\u0430\u0441\u0442\u043e\u043b\u043e\u043a \u2014 \u0443\u043f\u0443\u0449\u0435\u043d\u043d\u0430\u044f \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u044c."}, {"id": 25, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0413\u0435\u0440\u0431\u0430\u0440\u0438\u0439 / \u043b\u0438\u0441\u0442\u044c\u044f -->\n        <ellipse cx=\"36\" cy=\"38\" rx=\"14\" ry=\"20\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"2.2\" transform=\"rotate(-20 36 38)\"/>\n        <line x1=\"36\" y1=\"58\" x2=\"36\" y2=\"26\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n        <line x1=\"28\" y1=\"44\" x2=\"36\" y2=\"38\" stroke=\"#1a1a1a\" stroke-width=\"1\"/>\n        <line x1=\"44\" y1=\"38\" x2=\"36\" y2=\"32\" stroke=\"#1a1a1a\" stroke-width=\"1\"/>\n        <ellipse cx=\"52\" cy=\"50\" rx=\"12\" ry=\"16\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2\" transform=\"rotate(20 52 50)\"/>\n        <line x1=\"52\" y1=\"66\" x2=\"52\" y2=\"38\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>\n      </svg>", "title": "\u0421\u043e\u0431\u0435\u0440\u0438 \u043b\u0438\u0441\u0442\u044c\u044f", "text": "\u041f\u043e\u0441\u043b\u0435 \u0434\u043e\u0436\u0434\u044f \u043b\u0438\u0441\u0442\u044c\u044f \u044f\u0440\u043a\u0438\u0435 \u0438 \u043c\u043e\u043a\u0440\u043e-\u0431\u043b\u0435\u0441\u0442\u044f\u0449\u0438\u0435. \u0421\u043e\u0431\u0435\u0440\u0438 \u0441\u0430\u043c\u044b\u0435 \u043a\u0440\u0430\u0441\u0438\u0432\u044b\u0435 \u0438 \u0437\u0430\u0441\u0443\u0448\u0438 \u043c\u0435\u0436\u0434\u0443 \u043a\u043d\u0438\u0433\u0430\u043c\u0438."}, {"id": 26, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0419\u043e\u0433\u0430 / \u0440\u0430\u0441\u0442\u044f\u0436\u043a\u0430 -->\n        <ellipse cx=\"40\" cy=\"22\" rx=\"10\" ry=\"10\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <line x1=\"40\" y1=\"32\" x2=\"40\" y2=\"54\" stroke=\"#1a1a1a\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        <line x1=\"20\" y1=\"42\" x2=\"60\" y2=\"42\" stroke=\"#1a1a1a\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        <line x1=\"40\" y1=\"54\" x2=\"26\" y2=\"70\" stroke=\"#1a1a1a\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        <line x1=\"40\" y1=\"54\" x2=\"54\" y2=\"70\" stroke=\"#1a1a1a\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        <!-- \u043a\u0430\u043f\u043b\u0438 \u0434\u043e\u0436\u0434\u044f -->\n        <line x1=\"14\" y1=\"30\" x2=\"12\" y2=\"40\" stroke=\"#90CAF9\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n        <line x1=\"68\" y1=\"34\" x2=\"66\" y2=\"44\" stroke=\"#90CAF9\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n      </svg>", "title": "\u0419\u043e\u0433\u0430 \u043f\u043e\u0434 \u0434\u043e\u0436\u0434\u044c", "text": "\u0420\u0430\u0441\u0441\u0442\u0435\u043b\u0438 \u043a\u043e\u0432\u0440\u0438\u043a \u0443 \u043e\u043a\u043d\u0430 \u0438 \u0441\u0434\u0435\u043b\u0430\u0439 \u0445\u043e\u0442\u044f \u0431\u044b 10 \u043c\u0438\u043d\u0443\u0442 \u0439\u043e\u0433\u0438 \u043f\u043e\u0434 \u0437\u0432\u0443\u043a \u0434\u043e\u0436\u0434\u044f. \u042d\u0442\u043e \u043b\u0443\u0447\u0448\u0438\u0439 \u0444\u043e\u043d\u043e\u0432\u044b\u0439 \u0437\u0432\u0443\u043a."}, {"id": 27, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u041c\u043e\u0440\u043e\u0436\u0435\u043d\u043e\u0435 (\u0441\u0442\u0440\u0430\u043d\u043d\u043e\u0435, \u043d\u043e \u0434\u043e\u0436\u0434\u044c!) -->\n        <path d=\"M40 70 L28 40 L52 40 Z\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <ellipse cx=\"40\" cy=\"40\" rx=\"14\" ry=\"14\" fill=\"#EF9A9A\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <ellipse cx=\"34\" cy=\"32\" rx=\"10\" ry=\"10\" fill=\"#F5F0E8\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <ellipse cx=\"48\" cy=\"34\" rx=\"10\" ry=\"10\" fill=\"#90CAF9\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <!-- \u0434\u043e\u0436\u0434\u044c \u0441\u0432\u0435\u0440\u0445\u0443 -->\n        <line x1=\"24\" y1=\"14\" x2=\"22\" y2=\"22\" stroke=\"#90CAF9\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n        <line x1=\"56\" y1=\"12\" x2=\"54\" y2=\"20\" stroke=\"#90CAF9\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n      </svg>", "title": "\u041c\u043e\u0440\u043e\u0436\u0435\u043d\u043e\u0435 \u0432 \u0434\u043e\u0436\u0434\u044c", "text": "\u041a\u0443\u043f\u0438 \u043c\u043e\u0440\u043e\u0436\u0435\u043d\u043e\u0435 \u0438 \u0441\u044a\u0435\u0448\u044c \u0435\u0433\u043e \u043f\u043e\u0434 \u0434\u043e\u0436\u0434\u0451\u043c. \u042d\u0442\u043e \u043d\u0435\u043b\u0435\u043f\u043e, \u0445\u043e\u043b\u043e\u0434\u043d\u043e \u0438 \u0430\u0431\u0441\u043e\u043b\u044e\u0442\u043d\u043e \u043f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u043e."}, {"id": 28, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0421\u043a\u0432\u043e\u0440\u0435\u0447\u043d\u0438\u043a -->\n        <polygon points=\"40,12 60,28 20,28\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <rect x=\"20\" y=\"28\" width=\"40\" height=\"34\" rx=\"2\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/>\n        <circle cx=\"40\" cy=\"44\" r=\"8\" fill=\"#1a1a1a\"/>\n        <circle cx=\"40\" cy=\"44\" r=\"4\" fill=\"#F5F0E8\"/>\n        <line x1=\"40\" y1=\"62\" x2=\"40\" y2=\"76\" stroke=\"#1a1a1a\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n        <!-- \u043f\u0442\u0438\u0446\u0430 -->\n        <path d=\"M56 20 Q62 16 66 20 Q64 24 58 22 Z\" fill=\"#EF9A9A\" stroke=\"#1a1a1a\" stroke-width=\"1.2\"/>\n      </svg>", "title": "\u041f\u043e\u043a\u043e\u0440\u043c\u0438 \u043f\u0442\u0438\u0446", "text": "\u0412 \u0434\u043e\u0436\u0434\u044c \u043f\u0442\u0438\u0446\u044b \u043e\u0441\u043e\u0431\u0435\u043d\u043d\u043e \u0433\u043e\u043b\u043e\u0434\u043d\u044b\u0435. \u041d\u0430\u0441\u044b\u043f\u044c \u0437\u0435\u0440\u043d\u0430 \u043d\u0430 \u043f\u043e\u0434\u043e\u043a\u043e\u043d\u043d\u0438\u043a \u0438\u043b\u0438 \u0432\u044b\u0439\u0434\u0438 \u043f\u043e\u043a\u043e\u0440\u043c\u0438\u0442\u044c \u0443\u0442\u043e\u043a \u0432 \u043f\u0430\u0440\u043a\u0435."}, {"id": 29, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0423\u0431\u043e\u0440\u043a\u0430 / \u0448\u0432\u0430\u0431\u0440\u0430 -->\n        <rect x=\"36\" y=\"24\" width=\"8\" height=\"44\" rx=\"3\" fill=\"#FFD54F\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <rect x=\"20\" y=\"62\" width=\"40\" height=\"8\" rx=\"4\" fill=\"#EF9A9A\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>\n        <line x1=\"36\" y1=\"24\" x2=\"24\" y2=\"14\" stroke=\"#1a1a1a\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <!-- \u0437\u0432\u0451\u0437\u0434\u043e\u0447\u043a\u0438 \u0447\u0438\u0441\u0442\u043e\u0442\u044b -->\n        <line x1=\"16\" y1=\"38\" x2=\"22\" y2=\"38\" stroke=\"#FFD54F\" stroke-width=\"1.5\"/>\n        <line x1=\"19\" y1=\"35\" x2=\"19\" y2=\"41\" stroke=\"#FFD54F\" stroke-width=\"1.5\"/>\n        <line x1=\"58\" y1=\"32\" x2=\"64\" y2=\"32\" stroke=\"#FFD54F\" stroke-width=\"1.5\"/>\n        <line x1=\"61\" y1=\"29\" x2=\"61\" y2=\"35\" stroke=\"#FFD54F\" stroke-width=\"1.5\"/>\n      </svg>", "title": "\u0413\u0435\u043d\u0435\u0440\u0430\u043b\u044c\u043d\u0430\u044f \u0443\u0431\u043e\u0440\u043a\u0430", "text": "\u0414\u043e\u0436\u0434\u044c \u2014 \u043b\u0443\u0447\u0448\u0438\u0439 \u0434\u0435\u043d\u044c \u0434\u043b\u044f \u0443\u0431\u043e\u0440\u043a\u0438. \u0421\u043d\u0430\u0440\u0443\u0436\u0438 \u0441\u0435\u0440\u043e, \u0432\u043d\u0443\u0442\u0440\u0438 \u0432\u0441\u0451 \u0441\u0432\u0435\u0440\u043a\u0430\u0435\u0442. \u0412\u043a\u043b\u044e\u0447\u0438 \u043c\u0443\u0437\u044b\u043a\u0443 \u0438 \u0432\u043f\u0435\u0440\u0451\u0434."}, {"id": 30, "svg": "<svg class=\"task-icon\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\">\n        <!-- \u0420\u0430\u0434\u0443\u0433\u0430 -->\n        <path d=\"M10 60 Q10 24 40 24 Q70 24 70 60\" fill=\"none\" stroke=\"#EF9A9A\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n        <path d=\"M16 60 Q16 30 40 30 Q64 30 64 60\" fill=\"none\" stroke=\"#FFD54F\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n        <path d=\"M22 60 Q22 36 40 36 Q58 36 58 60\" fill=\"none\" stroke=\"#90CAF9\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n        <!-- \u043a\u0430\u043f\u043b\u0438 \u043f\u043e\u0434 \u0440\u0430\u0434\u0443\u0433\u043e\u0439 -->\n        <line x1=\"28\" y1=\"64\" x2=\"26\" y2=\"72\" stroke=\"#90CAF9\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <line x1=\"40\" y1=\"66\" x2=\"38\" y2=\"74\" stroke=\"#90CAF9\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <line x1=\"52\" y1=\"64\" x2=\"50\" y2=\"72\" stroke=\"#90CAF9\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n      </svg>", "title": "\u041f\u043e\u0439\u043c\u0430\u0439 \u0440\u0430\u0434\u0443\u0433\u0443", "text": "\u041f\u043e\u0441\u043b\u0435 \u0434\u043e\u0436\u0434\u044f \u0432\u044b\u0439\u0434\u0438 \u0438 \u043d\u0430\u0439\u0434\u0438 \u0440\u0430\u0434\u0443\u0433\u0443. \u0421\u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438\u0440\u0443\u0439 \u0435\u0451. \u041f\u043e\u043a\u0430\u0436\u0438 \u043a\u043e\u043c\u0443-\u043d\u0438\u0431\u0443\u0434\u044c. \u042d\u0442\u043e \u0444\u0438\u043d\u0430\u043b \u0442\u0440\u0435\u043a\u0435\u0440\u0430 \u2014 \u0442\u044b \u043c\u043e\u043b\u043e\u0434\u0435\u0446."}];
+    let state = { mode: null, completed: [], startedAt: null };
+    let currentModalId = null;
+    let pressTimer;
 
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2026 Xuyna. Built for the modern web.</p>
-                <div class="socials">
-                    <a href="#">Github</a>
-                    <a href="#">Twitter</a>
-                    <a href="#">Linkedin</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    // Load State
+    const saved = localStorage.getItem('rainTracker');
+    if (saved) {
+        try {
+            state = JSON.parse(saved);
+        } catch(e) {}
+    }
 
-    <script src="script.js"></script>
+    if (state.mode) {
+        renderTracker();
+    }
+
+    function startApp(mode) {
+        state = {
+            mode: mode,
+            completed: [],
+            startedAt: new Date().toISOString()
+        };
+        saveState();
+        renderTracker();
+    }
+
+    function saveState() {
+        localStorage.setItem('rainTracker', JSON.stringify(state));
+    }
+
+    function renderTracker() {
+        document.getElementById('screen-welcome').style.display = 'none';
+        document.getElementById('screen-tracker').style.display = 'block';
+        
+        document.getElementById('progress-total').textContent = state.mode;
+        updateProgress();
+
+        const grid = document.getElementById('task-grid');
+        grid.innerHTML = '';
+        
+        const tasksToShow = allTasks.slice(0, state.mode);
+        tasksToShow.forEach(task => {
+            const card = document.createElement('div');
+            card.className = 'task-card' + (state.completed.includes(task.id) ? ' completed' : '');
+            card.dataset.id = task.id;
+            
+            card.innerHTML = `
+                <div class="task-icon">${task.svg}</div>
+                <div class="task-title">${task.title}</div>
+            `;
+
+            // Touch events for tap vs hold
+            let isHolding = false;
+            let touchMoved = false;
+
+            const startHold = (e) => {
+                touchMoved = false;
+                isHolding = true;
+                pressTimer = setTimeout(() => {
+                    if (isHolding && !touchMoved) {
+                        openModal(task.id);
+                        isHolding = false; // Prevent tap event
+                    }
+                }, 500);
+            };
+
+            const endHold = (e) => {
+                clearTimeout(pressTimer);
+                if (isHolding && !touchMoved) {
+                    toggleTask(task.id);
+                }
+                isHolding = false;
+            };
+            
+            const moveHold = () => { touchMoved = true; };
+
+            // Touch
+            card.addEventListener('touchstart', startHold, {passive: true});
+            card.addEventListener('touchend', (e) => { e.preventDefault(); endHold(e); });
+            card.addEventListener('touchmove', moveHold, {passive: true});
+            card.addEventListener('touchcancel', () => { clearTimeout(pressTimer); isHolding = false; });
+
+            // Mouse (for desktop testing)
+            card.addEventListener('mousedown', startHold);
+            card.addEventListener('mouseup', (e) => { if(e.button === 0) endHold(e); });
+            card.addEventListener('mousemove', moveHold);
+            card.addEventListener('mouseleave', () => { clearTimeout(pressTimer); isHolding = false; });
+
+            grid.appendChild(card);
+        });
+    }
+
+    function toggleTask(id) {
+        const idx = state.completed.indexOf(id);
+        if (idx > -1) {
+            state.completed.splice(idx, 1);
+        } else {
+            state.completed.push(id);
+        }
+        saveState();
+        renderTracker();
+    }
+
+    function updateProgress() {
+        document.getElementById('progress-val').textContent = state.completed.length;
+    }
+
+    function openModal(id) {
+        const task = allTasks.find(t => t.id === id);
+        if (!task) return;
+        currentModalId = id;
+        document.getElementById('modal-icon').innerHTML = task.svg;
+        document.getElementById('modal-title').textContent = task.title;
+        document.getElementById('modal-text').textContent = task.text;
+        
+        const overlay = document.getElementById('modal-overlay');
+        overlay.classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('modal-overlay').classList.remove('active');
+        currentModalId = null;
+    }
+
+    function completeFromModal() {
+        if (currentModalId && !state.completed.includes(currentModalId)) {
+            state.completed.push(currentModalId);
+            saveState();
+            renderTracker();
+        }
+        closeModal();
+    }
+
+    document.getElementById('modal-overlay').addEventListener('click', (e) => {
+        if(e.target.id === 'modal-overlay') closeModal();
+    });
+
+    // Reset progress by 5 fast taps on title
+    let resetTaps = 0;
+    let resetTimer;
+    document.getElementById('reset-trigger').addEventListener('click', () => {
+        resetTaps++;
+        clearTimeout(resetTimer);
+        if (resetTaps >= 5) {
+            if(confirm('Сбросить весь прогресс?')) {
+                localStorage.removeItem('rainTracker');
+                location.reload();
+            }
+            resetTaps = 0;
+        } else {
+            resetTimer = setTimeout(() => resetTaps = 0, 1000);
+        }
+    });
+
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(r => console.log('SW registered'))
+                .catch(e => console.error('SW err', e));
+        });
+    }
+</script>
 </body>
 </html>

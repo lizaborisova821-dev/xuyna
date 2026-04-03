@@ -1,0 +1,906 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&display=swap');
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body, .wrap {
+    font-family: 'Caveat', cursive;
+    background: #F5F0E8;
+    color: #1a1a1a;
+  }
+
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+  }
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 36px 0 12px;
+    border-bottom: 2px solid #1a1a1a;
+    padding-bottom: 4px;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 20px 0 8px;
+  }
+
+  p, li {
+    font-size: 16px;
+    line-height: 1.6;
+    font-family: 'Caveat', cursive;
+  }
+
+  ul, ol {
+    padding-left: 22px;
+  }
+
+  li { margin-bottom: 4px; }
+
+  .subtitle {
+    text-align: center;
+    font-size: 17px;
+    color: #555;
+    margin-bottom: 32px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 2px solid #1a1a1a;
+    margin: 28px 0;
+  }
+
+  .task-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .task-card {
+    background: #fff;
+    border: 2px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 14px;
+    position: relative;
+  }
+
+  .task-num {
+    font-size: 12px;
+    color: #aaa;
+    position: absolute;
+    top: 8px;
+    right: 10px;
+  }
+
+  .task-icon {
+    display: block;
+    margin: 0 auto 8px;
+  }
+
+  .task-title {
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+
+  .task-text {
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .task-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+    justify-content: center;
+  }
+
+  .tag {
+    font-size: 12px;
+    border: 1.5px solid #1a1a1a;
+    border-radius: 20px;
+    padding: 1px 8px;
+    font-family: 'Caveat', cursive;
+  }
+
+  .tag.yellow { background: #FFD54F; }
+  .tag.blue { background: #90CAF9; }
+  .tag.red { background: #EF9A9A; }
+  .tag.milk { background: #F5F0E8; }
+
+  .palette {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+  }
+
+  .swatch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+  }
+
+  .swatch-box {
+    width: 28px;
+    height: 28px;
+    border: 2px solid #1a1a1a;
+    border-radius: 6px;
+  }
+
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 10px 0;
+  }
+
+  .flow-box {
+    background: #fff;
+    border: 2px solid #1a1a1a;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 15px;
+    font-family: 'Caveat', cursive;
+  }
+
+  .arrow {
+    font-size: 20px;
+    color: #1a1a1a;
+  }
+
+  .note {
+    background: #FFD54F;
+    border: 2px solid #1a1a1a;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 15px;
+  }
+
+  .section-badge {
+    display: inline-block;
+    background: #1a1a1a;
+    color: #F5F0E8;
+    font-family: 'Caveat', cursive;
+    font-size: 15px;
+    padding: 2px 12px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-family: 'Caveat', cursive;
+    font-size: 15px;
+  }
+
+  th {
+    background: #1a1a1a;
+    color: #F5F0E8;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+
+  td {
+    border: 1.5px solid #1a1a1a;
+    padding: 7px 12px;
+    vertical-align: top;
+  }
+
+  tr:nth-child(even) td { background: rgba(255,255,255,0.5); }
+
+  .icon-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    margin: 6px 0;
+  }
+</style>
+
+<div class="wrap">
+
+  <h1>🌧 Люблю грозу в начале мая</h1>
+  <p class="subtitle">ТЗ на разработку трекера дождливых занятий<br>мини-сайт / PWA-виджет · без базы данных · офлайн-режим</p>
+  <hr class="divider">
+
+  <!-- 1. ОБЩЕЕ -->
+  <h2>1. Общая концепция</h2>
+  <p>Трекер привычек/заданий, приуроченных к дождливой погоде. Пользователь выбирает количество заданий (12 / 22 / 30), последовательно выполняет их в дождливые дни, отмечает как выполненные одним касанием. Приложение работает как PWA — добавляется на главный экран смартфона в виде большого виджета, не требует регистрации или сервера.</p>
+
+  <div class="note">📌 Вся работа с данными — только localStorage браузера. Никакой БД, никакого бэкенда.</div>
+
+  <!-- 2. ТЕХНИЧЕСКИЙ СТЕК -->
+  <h2>2. Технический стек</h2>
+  <table>
+    <tr><th>Компонент</th><th>Решение</th><th>Причина</th></tr>
+    <tr><td>Основа</td><td>Vanilla HTML + CSS + JS (single-file)</td><td>Нет зависимостей, быстрый старт</td></tr>
+    <tr><td>Хранилище</td><td>localStorage (JSON)</td><td>Работает без интернета, без сервера</td></tr>
+    <tr><td>Офлайн / виджет</td><td>PWA + manifest.json + Service Worker</td><td>Установка на главный экран, работа офлайн</td></tr>
+    <tr><td>Шрифт</td><td>Caveat (Google Fonts) или аналог Pangolin</td><td>«Карандашный» рукописный стиль</td></tr>
+    <tr><td>Иконки</td><td>Встроенные SVG (нарисованные вручную)</td><td>Нет внешних зависимостей</td></tr>
+    <tr><td>Деплой</td><td>GitHub Pages / Netlify / Vercel (статика)</td><td>Бесплатно, HTTPS, поддержка PWA</td></tr>
+  </table>
+
+  <!-- 3. ДИЗАЙН -->
+  <h2>3. Дизайн-система</h2>
+
+  <h3>Цветовая палитра</h3>
+  <div class="palette">
+    <div class="swatch"><div class="swatch-box" style="background:#F5F0E8;"></div>Молочный фон #F5F0E8</div>
+    <div class="swatch"><div class="swatch-box" style="background:#1a1a1a;"></div>Чёрный контур #1A1A1A</div>
+    <div class="swatch"><div class="swatch-box" style="background:#FFD54F;"></div>Жёлтый #FFD54F</div>
+    <div class="swatch"><div class="swatch-box" style="background:#90CAF9;"></div>Голубой #90CAF9</div>
+    <div class="swatch"><div class="swatch-box" style="background:#EF9A9A;"></div>Красный/розовый #EF9A9A</div>
+  </div>
+
+  <h3>Типографика</h3>
+  <ul>
+    <li><strong>Заголовок приложения</strong> — Caveat Bold 28–32px</li>
+    <li><strong>Названия заданий</strong> — Caveat SemiBold 18px</li>
+    <li><strong>Текст карточек</strong> — Caveat Regular 15–16px</li>
+    <li><strong>Счётчик прогресса</strong> — Caveat Bold 20px</li>
+  </ul>
+
+  <h3>Визуальный стиль</h3>
+  <ul>
+    <li>Все элементы — как <em>нарисованные от руки</em>: слегка неровные края, SVG с имитацией карандашной линии</li>
+    <li>Зачёркивание выполненного — обычная чёрная линия поверх иконки (SVG line)</li>
+    <li>Карточки — белый прямоугольник с чёрным контуром 2px, скруглённые углы 12px</li>
+    <li>Фон всего приложения — молочный #F5F0E8</li>
+    <li>Никаких теней, градиентов, глянца — только плоский рисованный стиль</li>
+  </ul>
+
+  <!-- 4. СТРУКТУРА ЭКРАНОВ -->
+  <h2>4. Структура экранов</h2>
+
+  <h3>Экран 1 — Приветствие / выбор режима</h3>
+  <div class="flow-row">
+    <div class="flow-box">Заголовок «Люблю грозу в начале мая»</div>
+    <span class="arrow">→</span>
+    <div class="flow-box">Выбор: 12 / 22 / 30 заданий</div>
+    <span class="arrow">→</span>
+    <div class="flow-box">Кнопка «Начать»</div>
+  </div>
+
+  <h3>Экран 2 — Главный трекер (виджет)</h3>
+  <ul>
+    <li>Сверху: надпись «Люблю грозу в начале мая» — крупно, рукописным шрифтом</li>
+    <li>Черта-разделитель (нарисованная, немного кривая)</li>
+    <li>Счётчик прогресса: «выполнено X из N» + маленькая дождевая капля рядом</li>
+    <li>Сетка карточек-иконок: по 3–4 в ряд, адаптивно</li>
+    <li>Каждая карточка — SVG-рисунок + название задания под ним</li>
+    <li>Выполненные карточки перечёркнуты чёрной линией</li>
+  </ul>
+
+  <h3>Экран 3 — Раскрытая карточка (при удерживании)</h3>
+  <ul>
+    <li>Затемнение фона (overlay)</li>
+    <li>Крупная карточка по центру: SVG-иллюстрация + название + текст задания полностью</li>
+    <li>Кнопка закрыть «×»</li>
+    <li>Подсказка: «коснись рисунка — отметить выполненным»</li>
+  </ul>
+
+  <!-- 5. ПОВЕДЕНИЕ -->
+  <h2>5. Логика взаимодействия</h2>
+  <table>
+    <tr><th>Жест</th><th>Действие</th></tr>
+    <tr><td>Короткое касание карточки</td><td>Зачёркивает иконку + сохраняет в localStorage</td></tr>
+    <tr><td>Удержание карточки (500мс+)</td><td>Открывает полную карточку с текстом задания</td></tr>
+    <tr><td>Касание рисунка в открытой карточке</td><td>Отмечает задание выполненным, закрывает карточку</td></tr>
+    <tr><td>Касание затемнения или «×»</td><td>Закрывает карточку без отметки</td></tr>
+    <tr><td>Повторное касание выполненного</td><td>Снимает отметку (отмена)</td></tr>
+  </table>
+
+  <div class="note">⚡ Тап vs удержание: разделяются через touchstart + setTimeout(500ms). Если за 500мс не было touchend — открывается карточка. Если touchend произошёл раньше — это тап (зачёркивание).</div>
+
+  <!-- 6. PWA -->
+  <h2>6. PWA-конфигурация (виджет на главном экране)</h2>
+  <ul>
+    <li><strong>manifest.json</strong>: name, short_name, icons (192×192 и 512×512), display: "standalone", background_color: "#F5F0E8", theme_color: "#1a1a1a", start_url: "/"</li>
+    <li><strong>Service Worker</strong>: кешировать index.html + шрифты + SVG-иконки → работа офлайн</li>
+    <li><strong>Иконки приложения</strong>: SVG с жёлтым дождевиком на молочном фоне, экспортировать в PNG 192 и 512px</li>
+    <li><strong>display: "standalone"</strong> — скрывает браузерный UI, выглядит как нативное приложение</li>
+    <li><strong>Минимальная высота</strong> — вся страница 100svh, контент не скроллится при выборе «12 заданий»</li>
+  </ul>
+
+  <!-- 7. ХРАНЕНИЕ ДАННЫХ -->
+  <h2>7. Хранение данных (localStorage)</h2>
+  <p>Структура JSON-объекта в ключе <code>rainTracker</code>:</p>
+  <div class="flow-box" style="font-size:14px; margin:12px 0; white-space:pre-wrap;">{
+  "mode": 12,
+  "completed": [1, 4, 7],
+  "startedAt": "2025-05-01"
+}</div>
+  <ul>
+    <li><strong>mode</strong> — выбранный режим (12 / 22 / 30)</li>
+    <li><strong>completed</strong> — массив ID выполненных заданий</li>
+    <li><strong>startedAt</strong> — дата начала (для статистики)</li>
+  </ul>
+
+  <hr class="divider">
+
+  <!-- 8. ЗАДАНИЯ -->
+  <h2>8. Все задания — тексты и иллюстрации</h2>
+  <p style="margin-bottom:16px;">Ниже — все 30 заданий. Режим 12 использует задания 1–12, режим 22 — задания 1–22, режим 30 — все. Каждое задание: название, текст-зарисовка, SVG-иллюстрация (описание), элемент одежды/предмет.</p>
+
+  <div class="task-grid">
+
+    <div class="task-card">
+      <span class="task-num">#1</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Наушники + дождь -->
+        <ellipse cx="40" cy="36" rx="18" ry="14" fill="none" stroke="#1a1a1a" stroke-width="2.2"/>
+        <rect x="20" y="36" width="8" height="12" rx="4" fill="#90CAF9" stroke="#1a1a1a" stroke-width="2"/>
+        <rect x="52" y="36" width="8" height="12" rx="4" fill="#90CAF9" stroke="#1a1a1a" stroke-width="2"/>
+        <!-- капли дождя -->
+        <line x1="32" y1="58" x2="30" y2="66" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+        <line x1="40" y1="60" x2="38" y2="68" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+        <line x1="48" y1="57" x2="46" y2="65" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="task-title">Медитация</div>
+      <div class="task-text">Идёт дождь и самое время успокоить нервишки, послушав его звуки. Шшшшш...</div>
+      <div class="task-tags"><span class="tag blue">наушники</span><span class="tag milk">🧘</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#2</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Чашка чая с паром -->
+        <rect x="22" y="42" width="36" height="24" rx="6" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2.2"/>
+        <rect x="18" y="62" width="44" height="5" rx="2" fill="#EF9A9A" stroke="#1a1a1a" stroke-width="1.5"/>
+        <path d="M58 52 Q66 52 66 58 Q66 64 58 64" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+        <!-- пар -->
+        <path d="M30 38 Q32 32 30 26" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M40 36 Q42 30 40 24" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M50 38 Q52 32 50 26" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="task-title">Горячий чай</div>
+      <div class="task-text">Завари самый ароматный чай, какой только есть дома. Обними кружку двумя руками и просто грейся.</div>
+      <div class="task-tags"><span class="tag yellow">кружка</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#3</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Книга -->
+        <rect x="18" y="22" width="44" height="52" rx="4" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="2.2"/>
+        <line x1="40" y1="22" x2="40" y2="74" stroke="#1a1a1a" stroke-width="2"/>
+        <rect x="18" y="22" width="22" height="52" rx="4" fill="#90CAF9" stroke="#1a1a1a" stroke-width="2.2"/>
+        <line x1="24" y1="36" x2="36" y2="36" stroke="#1a1a1a" stroke-width="1.5"/>
+        <line x1="24" y1="44" x2="36" y2="44" stroke="#1a1a1a" stroke-width="1.5"/>
+        <line x1="24" y1="52" x2="32" y2="52" stroke="#1a1a1a" stroke-width="1.5"/>
+      </svg>
+      <div class="task-title">Чтение</div>
+      <div class="task-text">Открой ту книгу, что давно лежит на полке. Дождь за окном — лучший белый шум для чтения.</div>
+      <div class="task-tags"><span class="tag blue">жёлтые калоши</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#4</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Дождевик + человечек -->
+        <ellipse cx="40" cy="22" rx="10" ry="10" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2"/>
+        <path d="M24 36 Q24 28 40 28 Q56 28 56 36 L60 68 L20 68 Z" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2.2"/>
+        <!-- капли -->
+        <line x1="14" y1="14" x2="12" y2="24" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+        <line x1="66" y1="16" x2="64" y2="26" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="task-title">Прогулка в дождь</div>
+      <div class="task-text">Надень дождевик, выйди наружу и пройдись. Дождь — не помеха, он часть прогулки.</div>
+      <div class="task-tags"><span class="tag yellow">жёлтый дождевик</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#5</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Записная книжка + карандаш -->
+        <rect x="20" y="18" width="38" height="48" rx="4" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="2.2"/>
+        <line x1="28" y1="18" x2="28" y2="66" stroke="#1a1a1a" stroke-width="1.5"/>
+        <line x1="34" y1="30" x2="52" y2="30" stroke="#1a1a1a" stroke-width="1.5"/>
+        <line x1="34" y1="40" x2="52" y2="40" stroke="#1a1a1a" stroke-width="1.5"/>
+        <line x1="34" y1="50" x2="44" y2="50" stroke="#1a1a1a" stroke-width="1.5"/>
+        <!-- карандаш -->
+        <rect x="56" y="24" width="8" height="30" rx="2" fill="#FFD54F" stroke="#1a1a1a" stroke-width="1.5" transform="rotate(25 60 39)"/>
+        <polygon points="60,54 57,62 63,62" fill="#EF9A9A" stroke="#1a1a1a" stroke-width="1.5" transform="rotate(25 60 58)"/>
+      </svg>
+      <div class="task-title">Дневник погоды</div>
+      <div class="task-text">Запиши сегодняшний дождь. Как пахнет? Какой звук у капель о подоконник? Три предложения — и ты поэт.</div>
+      <div class="task-tags"><span class="tag yellow">карандаш</span><span class="tag milk">📝</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#6</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Зонт -->
+        <path d="M40 18 Q12 18 12 44 Q26 32 40 44 Q54 32 68 44 Q68 18 40 18 Z" fill="#EF9A9A" stroke="#1a1a1a" stroke-width="2.2"/>
+        <line x1="40" y1="44" x2="40" y2="68" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M40 68 Q40 76 34 76" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- полоски на зонте -->
+        <path d="M40 44 Q26 32 12 44" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+        <path d="M40 44 Q54 32 68 44" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+        <line x1="40" y1="18" x2="40" y2="44" stroke="#1a1a1a" stroke-width="1"/>
+      </svg>
+      <div class="task-title">Стой под дождём</div>
+      <div class="task-text">Просто выйди под козырёк или на балкон без зонта на одну минуту. Почувствуй, как мокро и живо.</div>
+      <div class="task-tags"><span class="tag red">красный зонт</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#7</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Тарелка с супом -->
+        <ellipse cx="40" cy="52" rx="28" ry="10" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2.2"/>
+        <path d="M12 52 Q12 68 40 68 Q68 68 68 52" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2"/>
+        <!-- пар -->
+        <path d="M28 44 Q30 36 28 28" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M40 42 Q42 34 40 26" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M52 44 Q54 36 52 28" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="task-title">Суп в дождь</div>
+      <div class="task-text">Свари суп — любой, даже из пакетика. Дождь и горячий суп — это пара, придуманная специально для таких дней.</div>
+      <div class="task-tags"><span class="tag yellow">фартук</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#8</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Плёнка/фото -->
+        <rect x="16" y="24" width="48" height="36" rx="4" fill="#90CAF9" stroke="#1a1a1a" stroke-width="2.2"/>
+        <rect x="22" y="30" width="36" height="24" rx="2" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="1.5"/>
+        <!-- капли на стекле -->
+        <ellipse cx="34" cy="42" rx="4" ry="5" fill="#90CAF9" stroke="#1a1a1a" stroke-width="1.2"/>
+        <ellipse cx="46" cy="38" rx="3" ry="4" fill="#90CAF9" stroke="#1a1a1a" stroke-width="1.2"/>
+        <ellipse cx="30" cy="35" rx="2" ry="3" fill="#90CAF9" stroke="#1a1a1a" stroke-width="1"/>
+      </svg>
+      <div class="task-title">Капли на стекле</div>
+      <div class="task-text">Сфотографируй капли на оконном стекле — это всегда красиво. Дождь сам рисует картину, ты только нажми.</div>
+      <div class="task-tags"><span class="tag blue">телефон</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#9</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Плед/клубок + носки -->
+        <ellipse cx="40" cy="44" rx="22" ry="16" fill="#EF9A9A" stroke="#1a1a1a" stroke-width="2.2"/>
+        <path d="M26 38 Q40 28 54 38" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+        <path d="M24 44 Q40 34 56 44" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+        <!-- носки -->
+        <path d="M18 60 L18 72 Q26 76 30 70 L30 60 Z" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2"/>
+        <path d="M50 60 L50 72 Q58 76 62 70 L62 60 Z" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2"/>
+      </svg>
+      <div class="task-title">День пледа</div>
+      <div class="task-text">Достань самый уютный плед, надень толстые носки и никуда не выходи. Сегодня можно.</div>
+      <div class="task-tags"><span class="tag yellow">носки</span><span class="tag red">плед</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#10</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Лужа + сапоги -->
+        <ellipse cx="40" cy="66" rx="28" ry="8" fill="#90CAF9" stroke="#1a1a1a" stroke-width="1.5"/>
+        <rect x="24" y="36" width="12" height="32" rx="4" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2.2"/>
+        <rect x="44" y="36" width="12" height="32" rx="4" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2.2"/>
+        <rect x="20" y="58" width="20" height="8" rx="4" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2"/>
+        <rect x="40" y="58" width="20" height="8" rx="4" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2"/>
+        <!-- брызги -->
+        <line x1="14" y1="60" x2="10" y2="52" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+        <line x1="66" y1="60" x2="70" y2="52" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="task-title">Прыгни в лужу</div>
+      <div class="task-text">Надень калоши и найди самую большую лужу. Прыгни. Просто потому что ты это заслужил(а).</div>
+      <div class="task-tags"><span class="tag yellow">жёлтые калоши</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#11</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Свеча -->
+        <rect x="34" y="34" width="12" height="34" rx="3" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="2.2"/>
+        <rect x="30" y="64" width="20" height="6" rx="3" fill="#FFD54F" stroke="#1a1a1a" stroke-width="1.5"/>
+        <!-- огонь -->
+        <path d="M40 34 Q36 26 38 18 Q40 14 42 18 Q44 26 40 34 Z" fill="#FFD54F" stroke="#1a1a1a" stroke-width="1.5"/>
+        <path d="M40 30 Q38 26 39 22 Q40 20 41 22 Q42 26 40 30 Z" fill="#EF9A9A"/>
+        <!-- блики свечи -->
+        <line x1="22" y1="42" x2="16" y2="38" stroke="#FFD54F" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="58" y1="42" x2="64" y2="38" stroke="#FFD54F" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="task-title">Свеча в темноте</div>
+      <div class="task-text">Зажги свечу, выключи верхний свет и слушай дождь в полутьме. Хотя бы пятнадцать минут.</div>
+      <div class="task-tags"><span class="tag yellow">свеча</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#12</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Ванна -->
+        <path d="M14 50 Q14 66 40 66 Q66 66 66 50 L66 44 L14 44 Z" fill="#90CAF9" stroke="#1a1a1a" stroke-width="2.2"/>
+        <line x1="14" y1="44" x2="66" y2="44" stroke="#1a1a1a" stroke-width="2"/>
+        <rect x="26" y="36" width="8" height="10" rx="2" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="1.5"/>
+        <rect x="46" y="36" width="8" height="10" rx="2" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="1.5"/>
+        <!-- пузыри пены -->
+        <circle cx="32" cy="50" r="5" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="1.5"/>
+        <circle cx="44" cy="48" r="4" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="1.5"/>
+        <circle cx="54" cy="52" r="3" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="1.5"/>
+      </svg>
+      <div class="task-title">Горячая ванна</div>
+      <div class="task-text">Набери горячую ванну с пеной, пока дождь стучит в окно. Лежи и слушай. Ты в лучшем месте на земле.</div>
+      <div class="task-tags"><span class="tag blue">пена</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#13</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Телефон + разговор -->
+        <rect x="28" y="16" width="24" height="44" rx="6" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="2.2"/>
+        <rect x="32" y="22" width="16" height="26" rx="2" fill="#90CAF9" stroke="#1a1a1a" stroke-width="1"/>
+        <circle cx="40" cy="54" r="3" fill="#1a1a1a"/>
+        <!-- пузыри речи -->
+        <ellipse cx="62" cy="30" rx="10" ry="7" fill="#FFD54F" stroke="#1a1a1a" stroke-width="1.5"/>
+        <polygon points="52,34 48,40 54,36" fill="#FFD54F" stroke="#1a1a1a" stroke-width="1"/>
+        <line x1="56" y1="27" x2="66" y2="27" stroke="#1a1a1a" stroke-width="1.2"/>
+        <line x1="56" y1="31" x2="64" y2="31" stroke="#1a1a1a" stroke-width="1.2"/>
+      </svg>
+      <div class="task-title">Позвони другу</div>
+      <div class="task-text">Позвони тому, кому давно не звонил. Скажи: «слушай, идёт дождь и я вспомнил о тебе».</div>
+      <div class="task-tags"><span class="tag yellow">телефон</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#14</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Горшок с растением -->
+        <path d="M26 52 L28 72 L52 72 L54 52 Z" fill="#EF9A9A" stroke="#1a1a1a" stroke-width="2.2"/>
+        <ellipse cx="40" cy="52" rx="16" ry="5" fill="#EF9A9A" stroke="#1a1a1a" stroke-width="2"/>
+        <line x1="40" y1="52" x2="40" y2="28" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+        <ellipse cx="28" cy="34" rx="10" ry="7" fill="#90CAF9" stroke="#1a1a1a" stroke-width="2" transform="rotate(-20 28 34)"/>
+        <ellipse cx="52" cy="30" rx="10" ry="7" fill="#90CAF9" stroke="#1a1a1a" stroke-width="2" transform="rotate(20 52 30)"/>
+        <ellipse cx="40" cy="24" rx="9" ry="6" fill="#90CAF9" stroke="#1a1a1a" stroke-width="2"/>
+      </svg>
+      <div class="task-title">Полей цветы</div>
+      <div class="task-text">Выставь домашние растения на балкон под дождь. Или просто полей их. Им тоже нравится дождливая погода.</div>
+      <div class="task-tags"><span class="tag blue">лейка</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#15</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Пазл -->
+        <rect x="18" y="20" width="22" height="22" rx="3" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2.2"/>
+        <circle cx="40" cy="26" r="4" fill="#FFD54F" stroke="#1a1a1a" stroke-width="1.5"/>
+        <rect x="40" y="20" width="22" height="22" rx="3" fill="#90CAF9" stroke="#1a1a1a" stroke-width="2.2"/>
+        <circle cx="40" cy="36" r="4" fill="#90CAF9" stroke="#1a1a1a" stroke-width="1.5"/>
+        <rect x="18" y="42" width="22" height="22" rx="3" fill="#EF9A9A" stroke="#1a1a1a" stroke-width="2.2"/>
+        <rect x="40" y="42" width="22" height="22" rx="3" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="2.2"/>
+      </svg>
+      <div class="task-title">Пазл</div>
+      <div class="task-text">Достань пазл — хотя бы на 100 деталей. Дождь снаружи, ты складываешь мир кусочками. Самое то.</div>
+      <div class="task-tags"><span class="tag yellow">пазл</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#16</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Выпечка / булочка -->
+        <ellipse cx="40" cy="50" rx="24" ry="14" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2.2"/>
+        <path d="M16 50 Q16 36 40 36 Q64 36 64 50" fill="#EF9A9A" stroke="#1a1a1a" stroke-width="2"/>
+        <!-- посыпка -->
+        <circle cx="30" cy="44" r="2" fill="#EF9A9A"/>
+        <circle cx="40" cy="40" r="2" fill="#EF9A9A"/>
+        <circle cx="52" cy="44" r="2" fill="#EF9A9A"/>
+        <circle cx="36" cy="47" r="1.5" fill="#1a1a1a"/>
+        <circle cx="46" cy="47" r="1.5" fill="#1a1a1a"/>
+      </svg>
+      <div class="task-title">Испеки что-нибудь</div>
+      <div class="task-text">Дождь и запах выпечки — комбо, которое делает жизнь терпимой. Хотя бы печенье из пакетика.</div>
+      <div class="task-tags"><span class="tag red">фартук</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#17</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Краски -->
+        <rect x="16" y="30" width="48" height="36" rx="6" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="2.2"/>
+        <circle cx="28" cy="44" r="7" fill="#EF9A9A" stroke="#1a1a1a" stroke-width="1.5"/>
+        <circle cx="40" cy="44" r="7" fill="#FFD54F" stroke="#1a1a1a" stroke-width="1.5"/>
+        <circle cx="52" cy="44" r="7" fill="#90CAF9" stroke="#1a1a1a" stroke-width="1.5"/>
+        <!-- кисточка -->
+        <line x1="54" y1="14" x2="54" y2="32" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
+        <ellipse cx="54" cy="34" rx="4" ry="5" fill="#EF9A9A" stroke="#1a1a1a" stroke-width="1.5"/>
+      </svg>
+      <div class="task-title">Нарисуй дождь</div>
+      <div class="task-text">Возьми что есть — карандаши, ручку, маркер — и нарисуй дождь. Плохо рисуешь? Тем лучше.</div>
+      <div class="task-tags"><span class="tag red">краски</span><span class="tag blue">кисточка</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#18</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Кот -->
+        <ellipse cx="40" cy="52" rx="20" ry="16" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2.2"/>
+        <ellipse cx="40" cy="34" rx="14" ry="12" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2.2"/>
+        <!-- уши -->
+        <polygon points="28,26 24,14 34,22" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2"/>
+        <polygon points="52,26 56,14 46,22" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2"/>
+        <!-- глаза -->
+        <ellipse cx="34" cy="33" rx="3" ry="4" fill="#1a1a1a"/>
+        <ellipse cx="46" cy="33" rx="3" ry="4" fill="#1a1a1a"/>
+        <!-- усы -->
+        <line x1="26" y1="38" x2="36" y2="37" stroke="#1a1a1a" stroke-width="1.5"/>
+        <line x1="44" y1="37" x2="54" y2="38" stroke="#1a1a1a" stroke-width="1.5"/>
+        <path d="M36 40 Q40 44 44 40" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+      </svg>
+      <div class="task-title">Обними кота</div>
+      <div class="task-text">Найди кота — своего, соседского, дворового. Дождь — лучший повод лежать и ничего не делать вместе.</div>
+      <div class="task-tags"><span class="tag yellow">мягкие тапочки</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#19</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Кино/экран -->
+        <rect x="12" y="20" width="56" height="38" rx="6" fill="#1a1a1a" stroke="#1a1a1a" stroke-width="2.2"/>
+        <rect x="16" y="24" width="48" height="30" rx="3" fill="#90CAF9"/>
+        <!-- попкорн -->
+        <rect x="30" y="58" width="20" height="14" rx="3" fill="#FFD54F" stroke="#1a1a1a" stroke-width="1.5"/>
+        <circle cx="34" cy="56" r="4" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="1.5"/>
+        <circle cx="40" cy="54" r="4" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="1.5"/>
+        <circle cx="46" cy="56" r="4" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="1.5"/>
+      </svg>
+      <div class="task-title">Фильм под дождь</div>
+      <div class="task-text">Включи тот фильм, который давно откладывал. Дождь за окном — встроенный саундтрек, бесплатно.</div>
+      <div class="task-tags"><span class="tag blue">плед</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#20</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Грибы/лес -->
+        <path d="M40 20 Q24 20 22 36 Q36 28 40 40 Q44 28 58 36 Q56 20 40 20 Z" fill="#EF9A9A" stroke="#1a1a1a" stroke-width="2.2"/>
+        <rect x="36" y="40" width="8" height="22" rx="2" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="2"/>
+        <!-- точки на шляпке -->
+        <circle cx="34" cy="28" r="3" fill="#F5F0E8"/>
+        <circle cx="46" cy="26" r="3" fill="#F5F0E8"/>
+        <circle cx="40" cy="24" r="2" fill="#F5F0E8"/>
+        <!-- капли -->
+        <line x1="18" y1="50" x2="16" y2="58" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+        <line x1="62" y1="52" x2="60" y2="60" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="task-title">Поход за грибами</div>
+      <div class="task-text">После дождя — самое время. Оденься, выйди в лес или парк, найди хотя бы один гриб. Или просто нюхай землю.</div>
+      <div class="task-tags"><span class="tag yellow">резиновые сапоги</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#21</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Плейлист / ноты -->
+        <rect x="18" y="20" width="44" height="46" rx="8" fill="#90CAF9" stroke="#1a1a1a" stroke-width="2.2"/>
+        <circle cx="30" cy="60" r="7" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="2"/>
+        <circle cx="52" cy="60" r="7" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="2"/>
+        <rect x="36" y="36" width="4" height="26" fill="#1a1a1a"/>
+        <rect x="48" y="32" width="4" height="30" fill="#1a1a1a"/>
+        <path d="M36 36 Q42 30 52 32" fill="none" stroke="#1a1a1a" stroke-width="2.5"/>
+      </svg>
+      <div class="task-title">Дождливый плейлист</div>
+      <div class="task-text">Составь плейлист специально для дождливого дня. Только медленные, тихие, немного меланхоличные вещи.</div>
+      <div class="task-tags"><span class="tag blue">наушники</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#22</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Велосипед под дождём -->
+        <circle cx="26" cy="54" r="14" fill="none" stroke="#1a1a1a" stroke-width="2.5"/>
+        <circle cx="54" cy="54" r="14" fill="none" stroke="#1a1a1a" stroke-width="2.5"/>
+        <line x1="26" y1="54" x2="40" y2="34" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round"/>
+        <line x1="40" y1="34" x2="54" y2="54" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round"/>
+        <line x1="40" y1="34" x2="40" y2="28" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
+        <line x1="35" y1="28" x2="48" y2="28" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
+        <!-- дождь -->
+        <line x1="22" y1="16" x2="20" y2="26" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+        <line x1="40" y1="12" x2="38" y2="22" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+        <line x1="58" y1="16" x2="56" y2="26" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="task-title">Езда под дождём</div>
+      <div class="task-text">Поедь на велосипеде или самокате в лёгкий дождь. Промокнуть разрешается. Это называется «жить».</div>
+      <div class="task-tags"><span class="tag yellow">дождевик</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#23</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Звонок + бумажный самолётик -->
+        <path d="M30 20 L20 60 L60 60 L50 20 Z" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2.2"/>
+        <line x1="30" y1="20" x2="60" y2="40" stroke="#1a1a1a" stroke-width="2"/>
+        <line x1="50" y1="20" x2="20" y2="40" stroke="#1a1a1a" stroke-width="1.5"/>
+        <line x1="30" y1="40" x2="50" y2="50" stroke="#1a1a1a" stroke-width="1"/>
+      </svg>
+      <div class="task-title">Письмо другу</div>
+      <div class="task-text">Напиши настоящее письмо от руки. Не сообщение — именно письмо. Дождь помогает думать о словах медленнее.</div>
+      <div class="task-tags"><span class="tag yellow">конверт</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#24</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Шахматы -->
+        <rect x="14" y="44" width="52" height="22" rx="4" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="2"/>
+        <!-- доска -->
+        <rect x="20" y="50" width="10" height="10" fill="#1a1a1a"/>
+        <rect x="40" y="50" width="10" height="10" fill="#1a1a1a"/>
+        <rect x="30" y="50" width="10" height="10" fill="#F5F0E8" stroke="#aaa" stroke-width="0.5"/>
+        <rect x="50" y="50" width="10" height="10" fill="#F5F0E8" stroke="#aaa" stroke-width="0.5"/>
+        <!-- фигуры -->
+        <ellipse cx="28" cy="38" rx="6" ry="4" fill="#FFD54F" stroke="#1a1a1a" stroke-width="1.5"/>
+        <rect x="25" y="28" width="6" height="12" rx="2" fill="#FFD54F" stroke="#1a1a1a" stroke-width="1.5"/>
+        <circle cx="28" cy="24" r="5" fill="#FFD54F" stroke="#1a1a1a" stroke-width="1.5"/>
+        <ellipse cx="52" cy="38" rx="6" ry="4" fill="#1a1a1a"/>
+        <rect x="49" y="28" width="6" height="12" rx="2" fill="#1a1a1a"/>
+        <circle cx="52" cy="24" r="5" fill="#1a1a1a"/>
+      </svg>
+      <div class="task-title">Настолки</div>
+      <div class="task-text">Шахматы, карты, монополия — всё что есть. Дождливый день без настолок — упущенная возможность.</div>
+      <div class="task-tags"><span class="tag yellow">любая игра</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#25</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Гербарий / листья -->
+        <ellipse cx="36" cy="38" rx="14" ry="20" fill="#90CAF9" stroke="#1a1a1a" stroke-width="2.2" transform="rotate(-20 36 38)"/>
+        <line x1="36" y1="58" x2="36" y2="26" stroke="#1a1a1a" stroke-width="1.5"/>
+        <line x1="28" y1="44" x2="36" y2="38" stroke="#1a1a1a" stroke-width="1"/>
+        <line x1="44" y1="38" x2="36" y2="32" stroke="#1a1a1a" stroke-width="1"/>
+        <ellipse cx="52" cy="50" rx="12" ry="16" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2" transform="rotate(20 52 50)"/>
+        <line x1="52" y1="66" x2="52" y2="38" stroke="#1a1a1a" stroke-width="1.5"/>
+      </svg>
+      <div class="task-title">Собери листья</div>
+      <div class="task-text">После дождя листья яркие и мокро-блестящие. Собери самые красивые и засуши между книгами.</div>
+      <div class="task-tags"><span class="tag blue">резиновые сапоги</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#26</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Йога / растяжка -->
+        <ellipse cx="40" cy="22" rx="10" ry="10" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2"/>
+        <line x1="40" y1="32" x2="40" y2="54" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="20" y1="42" x2="60" y2="42" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="40" y1="54" x2="26" y2="70" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="40" y1="54" x2="54" y2="70" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- капли дождя -->
+        <line x1="14" y1="30" x2="12" y2="40" stroke="#90CAF9" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="68" y1="34" x2="66" y2="44" stroke="#90CAF9" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="task-title">Йога под дождь</div>
+      <div class="task-text">Расстели коврик у окна и сделай хотя бы 10 минут йоги под звук дождя. Это лучший фоновый звук.</div>
+      <div class="task-tags"><span class="tag yellow">носки</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#27</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Мороженое (странное, но дождь!) -->
+        <path d="M40 70 L28 40 L52 40 Z" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2"/>
+        <ellipse cx="40" cy="40" rx="14" ry="14" fill="#EF9A9A" stroke="#1a1a1a" stroke-width="2.2"/>
+        <ellipse cx="34" cy="32" rx="10" ry="10" fill="#F5F0E8" stroke="#1a1a1a" stroke-width="2"/>
+        <ellipse cx="48" cy="34" rx="10" ry="10" fill="#90CAF9" stroke="#1a1a1a" stroke-width="2"/>
+        <!-- дождь сверху -->
+        <line x1="24" y1="14" x2="22" y2="22" stroke="#90CAF9" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="56" y1="12" x2="54" y2="20" stroke="#90CAF9" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="task-title">Мороженое в дождь</div>
+      <div class="task-text">Купи мороженое и съешь его под дождём. Это нелепо, холодно и абсолютно правильно.</div>
+      <div class="task-tags"><span class="tag yellow">дождевик</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#28</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Скворечник -->
+        <polygon points="40,12 60,28 20,28" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2.2"/>
+        <rect x="20" y="28" width="40" height="34" rx="2" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2.2"/>
+        <circle cx="40" cy="44" r="8" fill="#1a1a1a"/>
+        <circle cx="40" cy="44" r="4" fill="#F5F0E8"/>
+        <line x1="40" y1="62" x2="40" y2="76" stroke="#1a1a1a" stroke-width="3" stroke-linecap="round"/>
+        <!-- птица -->
+        <path d="M56 20 Q62 16 66 20 Q64 24 58 22 Z" fill="#EF9A9A" stroke="#1a1a1a" stroke-width="1.2"/>
+      </svg>
+      <div class="task-title">Покорми птиц</div>
+      <div class="task-text">В дождь птицы особенно голодные. Насыпь зерна на подоконник или выйди покормить уток в парке.</div>
+      <div class="task-tags"><span class="tag blue">зонтик</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#29</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Уборка / швабра -->
+        <rect x="36" y="24" width="8" height="44" rx="3" fill="#FFD54F" stroke="#1a1a1a" stroke-width="2"/>
+        <rect x="20" y="62" width="40" height="8" rx="4" fill="#EF9A9A" stroke="#1a1a1a" stroke-width="2"/>
+        <line x1="36" y1="24" x2="24" y2="14" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
+        <!-- звёздочки чистоты -->
+        <line x1="16" y1="38" x2="22" y2="38" stroke="#FFD54F" stroke-width="1.5"/>
+        <line x1="19" y1="35" x2="19" y2="41" stroke="#FFD54F" stroke-width="1.5"/>
+        <line x1="58" y1="32" x2="64" y2="32" stroke="#FFD54F" stroke-width="1.5"/>
+        <line x1="61" y1="29" x2="61" y2="35" stroke="#FFD54F" stroke-width="1.5"/>
+      </svg>
+      <div class="task-title">Генеральная уборка</div>
+      <div class="task-text">Дождь — лучший день для уборки. Снаружи серо, внутри всё сверкает. Включи музыку и вперёд.</div>
+      <div class="task-tags"><span class="tag red">фартук</span></div>
+    </div>
+
+    <div class="task-card">
+      <span class="task-num">#30</span>
+      <svg class="task-icon" width="80" height="80" viewBox="0 0 80 80">
+        <!-- Радуга -->
+        <path d="M10 60 Q10 24 40 24 Q70 24 70 60" fill="none" stroke="#EF9A9A" stroke-width="6" stroke-linecap="round"/>
+        <path d="M16 60 Q16 30 40 30 Q64 30 64 60" fill="none" stroke="#FFD54F" stroke-width="6" stroke-linecap="round"/>
+        <path d="M22 60 Q22 36 40 36 Q58 36 58 60" fill="none" stroke="#90CAF9" stroke-width="6" stroke-linecap="round"/>
+        <!-- капли под радугой -->
+        <line x1="28" y1="64" x2="26" y2="72" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+        <line x1="40" y1="66" x2="38" y2="74" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+        <line x1="52" y1="64" x2="50" y2="72" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="task-title">Поймай радугу</div>
+      <div class="task-text">После дождя выйди и найди радугу. Сфотографируй её. Покажи кому-нибудь. Это финал трекера — ты молодец.</div>
+      <div class="task-tags"><span class="tag yellow">дождевик</span><span class="tag blue">телефон</span><span class="tag red">улыбка</span></div>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+
+  <!-- 9. СТРУКТУРА ФАЙЛОВ -->
+  <h2>9. Структура проекта</h2>
+  <div class="flow-box" style="font-size:14px; white-space:pre; margin:12px 0;">
+rain-tracker/
+├── index.html        ← всё приложение (one-file)
+├── manifest.json     ← PWA-манифест
+├── sw.js             ← Service Worker
+├── icons/
+│   ├── icon-192.png
+│   └── icon-512.png
+└── README.md
+  </div>
+
+  <!-- 10. КЛЮЧЕВЫЕ ТРЕБОВАНИЯ -->
+  <h2>10. Ключевые требования к реализации</h2>
+  <ul>
+    <li>Работает без интернета после первой загрузки (Service Worker)</li>
+    <li>Сохраняет прогресс в localStorage — данные не теряются при закрытии</li>
+    <li>Адаптив: корректно отображается на экранах 320px–430px (все современные смартфоны)</li>
+    <li>Нет зависимостей от внешних API кроме Google Fonts</li>
+    <li>Весь JS — vanilla, без фреймворков</li>
+    <li>SVG-иллюстрации встроены inline в HTML</li>
+    <li>При полном выполнении — анимация/экран финала («Ты пережил(а) всю непогоду!»)</li>
+    <li>Кнопка сброса прогресса (скрытая, например 5 тапов по заголовку)</li>
+  </ul>
+
+  <div class="note">🌧 Готово! Это полноценное ТЗ для разработчика или для самостоятельной реализации в Cursor/Windsurf/Bolt.new. Весь код — один HTML-файл + минимальный манифест.</div>
+
+</div>
